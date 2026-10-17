@@ -1,0 +1,24 @@
+{
+  "v": 3,
+  "assetGroups": {},
+  "blobs": {},
+  "createdOnFiles": {
+    "at": "2026-10-17T20:52:22Z",
+    "v": 1
+  },
+  "docs": {
+    "sections": []
+  },
+  "groups": [],
+  "lastChange": {
+    "at": "2026-10-17T21:05:00Z",
+    "by": "Pete",
+    "note": "Built from the Mete Blueprint V2 design spec; no logo or font files yet.",
+    "via": "Claude"
+  },
+  "layout": "files",
+  "libraries": [],
+  "namespace": "MeteBlueprint",
+  "sections": {},
+  "title": "Mete Business Blueprint"
+}

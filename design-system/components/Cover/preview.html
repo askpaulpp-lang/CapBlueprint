@@ -1,0 +1,39 @@
+<!-- @dsCard height=288 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Serif:wght@600&display=swap">
+<style>
+  body { margin: 0; background: var(--bg); }
+  .cover { position: relative; width: 960px; height: 288px; background: var(--bg); overflow: hidden; }
+  .cover svg { position: absolute; left: 0; top: 0; }
+  .text { position: absolute; left: 32px; bottom: 28px; max-width: 900px; }
+  .name { font-family: var(--font-serif); font-weight: 600; font-size: 64px; line-height: .95; color: var(--ink); margin: 0; }
+  .tag { font-family: var(--font-sans); font-size: 14px; line-height: 20px; color: var(--ink-muted); margin: 16px 0 0; }
+  .navy { fill: var(--navy); }
+  .brass { fill: var(--brass); }
+  .tint { fill: var(--navy-tint); }
+  .slate { fill: var(--ink-muted); }
+  .plus { stroke: var(--navy-tint); stroke-width: 1.5; fill: none; }
+  .r-md { rx: var(--radius-md); }
+</style>
+<div class="cover">
+  <svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+    <!--
+      blocks: navy 432x112 (brand, largest), navy-tint 224x80, brass 96x112, ink-muted 128x48
+      arrangement: top-band skeleton (name too wide for the 440px zone); a strip of unequal bands bleeding off the top edge
+      pattern: plus grid at space-8 pitch (32px) in navy-tint over the navy band; precise, technical — a drafting blueprint
+      steps/radii: band height 112 (space-8 x 3.5), gaps space-4 (16); corners radius-md
+    -->
+    <rect class="navy r-md" x="-8" y="-8" width="440" height="120"/>
+    <rect class="brass r-md" x="448" y="-8" width="96" height="120"/>
+    <rect class="tint r-md" x="560" y="-8" width="224" height="88"/>
+    <rect class="slate r-md" x="800" y="-8" width="176" height="56"/>
+    <g class="plus">
+      <path d="M40 24v16M32 32h16M104 24v16M96 32h16M168 24v16M160 32h16M232 24v16M224 32h16M296 24v16M288 32h16M360 24v16M352 32h16"/>
+      <path d="M40 72v16M32 80h16M104 72v16M96 80h16M168 72v16M160 80h16M232 72v16M224 80h16M296 72v16M288 80h16M360 72v16M352 80h16"/>
+    </g>
+  </svg>
+  <div class="text">
+    <h1 class="name">Mete Business Blueprint</h1>
+    <p class="tag">Research, CAP and OPS turned into a plan a business can launch from.</p>
+  </div>
+</div>
+<script></script>
