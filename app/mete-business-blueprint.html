@@ -1,0 +1,1559 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Mete Business Blueprint</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500;600&display=swap">
+<style>
+/* Layout: app shell — fixed left sidebar (12 sections), sticky project/status bar with global actions, scrolling work area. Tokens mirror the Mete Business Blueprint design system. */
+:root{
+  --bg:#faf8f3;--surface:#ffffff;--surface-2:#f2eee5;--ink:#232c3a;--ink-muted:#566172;--line:#e2dccf;--border:#808894;
+  --navy:#1b2a4e;--on-navy:#ffffff;--navy-tint:#e6eaf2;--brass:#c9a227;--brass-ink:#7d6213;--brass-soft:#c9a22726;
+  --ok:#2e6b45;--ok-soft:#2e6b451f;--warn:#8a5a00;--warn-soft:#8a5a001f;--danger:#a33a2c;--danger-soft:#a33a2c1f;
+  --font-serif:"IBM Plex Serif",Georgia,"Times New Roman",serif;
+  --font-sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r-sm:4px;--r-md:6px;--r-lg:10px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11161f;--surface:#18202c;--surface-2:#212a38;--ink:#e8e4da;--ink-muted:#a3abb8;--line:#2c3646;--border:#6b7586;
+  --navy:#9db3de;--on-navy:#11161f;--navy-tint:#1f2c47;--brass:#d4ae3a;--brass-ink:#dcbb52;--brass-soft:#d4ae3a26;
+  --ok:#73c08f;--ok-soft:#73c08f24;--warn:#e0a84a;--warn-soft:#e0a84a24;--danger:#ec8a78;--danger-soft:#ec8a7824;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161f;--surface:#18202c;--surface-2:#212a38;--ink:#e8e4da;--ink-muted:#a3abb8;--line:#2c3646;--border:#6b7586;
+  --navy:#9db3de;--on-navy:#11161f;--navy-tint:#1f2c47;--brass:#d4ae3a;--brass-ink:#dcbb52;--brass-soft:#d4ae3a26;
+  --ok:#73c08f;--ok-soft:#73c08f24;--warn:#e0a84a;--warn-soft:#e0a84a24;--danger:#ec8a78;--danger-soft:#ec8a7824;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font:15px/22px var(--font-sans);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--surface)}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+h1{font:600 28px/34px var(--font-serif);color:var(--ink)}
+h2{font:600 18px/26px var(--font-sans)}
+h3{font:600 15px/22px var(--font-sans)}
+p{margin:0}
+a{color:var(--navy)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+.num,.tnum{font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-muted)}
+.small{font-size:13px;line-height:18px}
+.label{font-size:11px;line-height:16px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)}
+.eyebrow{font-size:11px;line-height:16px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--brass-ink)}
+
+/* shell */
+.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100%}
+.side{background:var(--surface-2);border-right:1px solid var(--line);position:sticky;top:0;height:100vh;overflow:auto;padding:20px 12px calc(20px + env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));display:flex;flex-direction:column;gap:16px}
+.brand{padding:0 8px;display:grid;gap:2px}
+.brand b{font:600 17px/22px var(--font-serif);color:var(--navy)}
+.brand span{font-size:12px;color:var(--ink-muted)}
+.nav{display:grid;gap:2px}
+.nav button{all:unset;cursor:pointer;display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:var(--r-md);color:var(--ink);font-size:14px;line-height:20px}
+.nav button:hover{background:var(--surface)}
+.nav button[aria-current="page"]{background:var(--navy);color:var(--on-navy)}
+.nav button:focus-visible{outline:2px solid var(--navy);outline-offset:1px}
+.nav .n{width:20px;font-size:11px;font-variant-numeric:tabular-nums;color:inherit;opacity:.65}
+.nav .dot{margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--danger)}
+.side-foot{margin-top:auto;padding:0 8px;font-size:12px;line-height:17px;color:var(--ink-muted)}
+.main{min-width:0;display:flex;flex-direction:column}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--surface);border-bottom:1px solid var(--line);padding-block:10px;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px));display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+.bar .proj{display:flex;align-items:center;gap:8px 10px;min-width:0;flex:1 1 380px;flex-wrap:wrap}
+.bar .proj select{flex:0 1 240px;min-width:150px;max-width:260px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);padding:5px 8px;font-weight:600}
+.bar .save{font-size:12px;color:var(--ink-muted);white-space:nowrap}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+.menu-btn{display:none}
+.content{padding-block:28px 64px;padding-left:max(32px,env(safe-area-inset-left,0px));padding-right:max(32px,env(safe-area-inset-right,0px));display:grid;gap:24px;max-width:1240px;width:100%}
+.head{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between}
+.head .t{display:grid;gap:4px;min-width:0;max-width:70ch}
+
+/* controls */
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--ink);border-radius:var(--r-md);padding:6px 12px;font-size:14px;line-height:20px;font-weight:500;cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--surface-2)}
+.btn.primary{background:var(--navy);border-color:var(--navy);color:var(--on-navy)}
+.btn.primary:hover{filter:brightness(1.12)}
+.btn.brass{background:var(--brass);border-color:var(--brass);color:#1b2a4e}
+.btn.brass:hover{filter:brightness(1.06)}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.ghost:hover{background:var(--surface-2)}
+.btn.sm{padding:3px 8px;font-size:13px}
+.btn.danger{color:var(--danger);border-color:var(--danger)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn svg{width:16px;height:16px;flex:none}
+input[type=text],input[type=number],input[type=date],input[type=url],input[type=search],select,textarea{width:100%;min-width:0;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);padding:6px 9px;font-size:14px;line-height:20px}
+textarea{resize:vertical;min-height:64px}
+input[type=number]{font-variant-numeric:tabular-nums}
+input:disabled,select:disabled,textarea:disabled{background:var(--surface-2);color:var(--ink-muted)}
+.f{display:grid;gap:5px;min-width:0}
+.f .help{font-size:12px;line-height:17px;color:var(--ink-muted)}
+.f .row{display:flex;gap:6px;align-items:center}
+.f .row>input{flex:1}
+.f .affix{color:var(--ink-muted);font-size:13px}
+.req{color:var(--danger);font-weight:600}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.stack{display:grid;gap:16px}
+.res-grid{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr) minmax(0,300px);gap:16px;align-items:start}
+.fin-grid{display:grid;grid-template-columns:minmax(0,460px) minmax(0,1fr);gap:16px;align-items:start}
+.stack-sm{display:grid;gap:8px}
+.flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.between{display:flex;gap:8px 16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+
+/* surfaces */
+.content>*,.card>*,.stack>*,.stack-sm>*{min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:16px;display:grid;gap:12px;min-width:0}
+.card.pad-lg{padding:20px}
+.well{background:var(--surface-2);border-radius:var(--r-md);padding:12px 14px}
+.note{border:1px solid var(--line);border-radius:var(--r-md);padding:10px 14px;background:var(--navy-tint);color:var(--ink);font-size:13px;line-height:19px}
+.note.warn{background:var(--warn-soft);border-color:transparent}
+.note.danger{background:var(--danger-soft);border-color:transparent}
+.note.brass{background:var(--brass-soft);border-color:transparent}
+.illus{display:inline-flex;align-items:center;gap:6px;background:var(--brass-soft);color:var(--brass-ink);border-radius:var(--r-sm);padding:2px 8px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+
+/* chips */
+.chip{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:1px 9px;font-size:11px;line-height:18px;font-weight:600;letter-spacing:.04em;white-space:nowrap}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.s-Draft{background:var(--surface-2);color:var(--ink-muted)}
+.s-Researching{background:var(--navy-tint);color:var(--navy)}
+.s-Needs{background:var(--brass-soft);color:var(--brass-ink)}
+.s-Ready{background:var(--ok-soft);color:var(--ok)}
+.s-Published{background:var(--navy);color:var(--on-navy)}
+.t-Verified{background:var(--ok-soft);color:var(--ok)}
+.t-Estimated{background:var(--warn-soft);color:var(--warn)}
+.t-User{background:var(--navy-tint);color:var(--navy)}
+.t-Assumption{background:var(--brass-soft);color:var(--brass-ink)}
+.sev-Critical{background:var(--danger-soft);color:var(--danger)}
+.sev-High{background:var(--warn-soft);color:var(--warn)}
+.sev-Medium{background:var(--navy-tint);color:var(--navy)}
+.sev-Low{background:var(--surface-2);color:var(--ink-muted)}
+.c-ok{background:var(--ok-soft);color:var(--ok)}
+.c-warn{background:var(--warn-soft);color:var(--warn)}
+.c-bad{background:var(--danger-soft);color:var(--danger)}
+.c-info{background:var(--navy-tint);color:var(--navy)}
+.tagsel{width:auto!important;font-size:12px!important;padding:3px 6px!important}
+
+/* kpi */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:14px 16px;display:grid;gap:2px;min-width:0}
+.kpi .v{font:600 24px/30px var(--font-sans);font-variant-numeric:tabular-nums}
+.kpi .v.bad{color:var(--danger)}
+.kpi .v.good{color:var(--ok)}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;line-height:20px}
+th{background:var(--surface-2);text-align:left;font-size:11px;line-height:16px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);padding:8px 10px;white-space:nowrap;border-bottom:1px solid var(--line)}
+td{padding:6px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td input,td select,td textarea{padding:4px 6px;font-size:13px}
+td .w-num{width:88px}
+tr.neg td.n{color:var(--danger)}
+tr.total td{font-weight:600;background:var(--surface-2)}
+tr.sel td{background:var(--navy-tint)}
+
+/* tabs */
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs button{all:unset;cursor:pointer;padding:8px 12px;font-size:14px;color:var(--ink-muted);border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--navy);border-bottom-color:var(--navy);font-weight:600}
+.tabs button:focus-visible{outline:2px solid var(--navy)}
+
+/* panels */
+details.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md)}
+details.panel>summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+details.panel>summary::-webkit-details-marker{display:none}
+details.panel>summary .chev{transition:transform .15s;color:var(--ink-muted)}
+details.panel[open]>summary .chev{transform:rotate(90deg)}
+details.panel .body{padding:0 16px 16px;display:grid;gap:16px}
+.score{display:inline-grid;place-items:center;min-width:52px;padding:2px 8px;border-radius:var(--r-sm);font-weight:600;font-variant-numeric:tabular-nums;font-size:14px}
+.bar-meter{height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden}
+.bar-meter i{display:block;height:100%;background:var(--brass)}
+.rule{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:8px;align-items:start;font-size:14px}
+.rule .mk{font-weight:700}
+.rule .mk.y{color:var(--ok)}
+.rule .mk.n{color:var(--danger)}
+
+/* funnel */
+.funnel{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.fstep{background:var(--surface-2);border-radius:var(--r-md);padding:10px 12px;display:grid;gap:2px;position:relative;min-width:0}
+.fstep .v{font:600 20px/26px var(--font-sans);font-variant-numeric:tabular-nums}
+.fstep .fill{position:absolute;left:0;bottom:0;height:3px;background:var(--navy);border-radius:0 0 0 var(--r-md)}
+
+/* charts */
+.chart svg{width:100%;height:auto;display:block}
+.chart .ax{stroke:var(--line)}
+.chart text{fill:var(--ink-muted);font-size:11px;font-family:var(--font-sans)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-muted)}
+.legend i{display:inline-block;width:12px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+
+/* steps */
+.steps{display:flex;gap:6px;flex-wrap:wrap}
+.steps button{all:unset;cursor:pointer;display:flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;border-radius:999px;background:var(--surface-2);font-size:13px}
+.steps button b{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--surface);font-size:12px;border:1px solid var(--line)}
+.steps button[aria-current="step"]{background:var(--navy);color:var(--on-navy)}
+.steps button[aria-current="step"] b{background:var(--brass);color:#1b2a4e;border-color:var(--brass)}
+.steps button.done b{background:var(--ok);color:var(--on-navy);border-color:var(--ok)}
+
+/* board */
+.board{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.task{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:10px 12px;display:grid;gap:6px}
+.task.top{border-color:var(--brass);box-shadow:inset 0 0 0 1px var(--brass)}
+.task.done .tt{text-decoration:line-through;color:var(--ink-muted)}
+.task .tt{font-weight:500}
+
+/* report */
+.sheet{background:#fffdf8;color:#232c3a;border:1px solid var(--line);border-radius:var(--r-lg);padding:48px 56px;max-width:880px;width:100%;margin:0 auto;display:grid;gap:22px;font-size:14px;line-height:21px}
+.sheet h1{font:600 30px/36px var(--font-serif);color:#1b2a4e}
+.sheet h2{font:600 20px/26px var(--font-serif);color:#1b2a4e;border-bottom:2px solid #c9a227;padding-bottom:4px}
+.sheet h3{font-size:14px;color:#1b2a4e}
+.sheet .muted{color:#566172}
+.sheet table th{background:#f2eee5;color:#566172}
+.sheet table td,.sheet table th{border-color:#e2dccf}
+.sheet .tw{background:#fff;border-color:#e2dccf}
+.sheet .cover{border-left:6px solid #c9a227;padding:8px 0 8px 20px;display:grid;gap:8px}
+.sheet .pg{font-size:11px;color:#566172;text-align:right;border-top:1px solid #e2dccf;padding-top:4px}
+.sheet .illus{background:#c9a22726;color:#7d6213}
+.sheet .chip{background:#f2eee5;color:#232c3a}
+.sheet .chip.t-Assumption{background:#c9a22726;color:#7d6213}
+.sheet .chip.t-Verified{background:#2e6b451f;color:#2e6b45}
+.sheet td input{background:#fff}
+
+/* toast + banners */
+.toast{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:var(--r-md);font-size:14px;max-width:min(420px,calc(100vw - 32px))}
+.banner{padding:8px max(24px,env(safe-area-inset-right,0px)) 8px max(24px,env(safe-area-inset-left,0px));font-size:13px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.banner.warn{background:var(--warn-soft)}
+.banner.info{background:var(--navy-tint)}
+.modal-bg{position:fixed;inset:0;background:#0008;z-index:50;display:grid;place-items:center;padding:16px}
+.modal{background:var(--surface);border-radius:var(--r-lg);padding:20px;width:min(560px,100%);max-height:90vh;overflow:auto;display:grid;gap:14px;border:1px solid var(--line)}
+.empty{display:grid;place-items:center;text-align:center;gap:10px;padding:48px 16px;border:1px dashed var(--border);border-radius:var(--r-md);background:var(--surface)}
+.skel{height:14px;border-radius:4px;background:var(--surface-2)}
+
+@media (max-width:1240px){.fin-grid{grid-template-columns:minmax(0,1fr)}.res-grid{grid-template-columns:minmax(0,1fr) minmax(0,300px)}.res-grid>:first-child{grid-column:1/-1}}
+@media (max-width:1100px){.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;inset:0 auto 0 0;width:min(290px,86vw);z-index:45;transform:translateX(-100%);transition:transform .2s;height:100%;padding-top:calc(20px + env(safe-area-inset-top,0px))}
+  .app.open .side{transform:none;box-shadow:0 0 0 100vmax #0007}
+  .menu-btn{display:inline-flex}
+  .bar{position:static;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .actions{flex-wrap:nowrap;overflow-x:auto;flex:1 1 100%;min-width:0;padding-bottom:2px}
+  .bar .proj{flex-wrap:wrap;flex:1 1 0;min-width:0}
+  .bar .save{white-space:normal}
+  .content{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 56px}
+  .grid2,.grid3,.grid4,.res-grid{grid-template-columns:minmax(0,1fr)}
+  .funnel{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sheet{padding:24px 18px}
+  .banner{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app" id="app">
+  <aside class="side" id="side" aria-label="Sections"></aside>
+  <div class="main">
+    <div id="banners"></div>
+    <header class="bar" id="bar"></header>
+    <main class="content" id="content">
+      <div class="stack" aria-busy="true">
+        <div class="eyebrow">Mete Business Consulting</div>
+        <h1>Mete Business Blueprint</h1>
+        <p class="muted">Loading your saved blueprints…</p>
+        <div class="skel" style="width:60%"></div><div class="skel" style="width:40%"></div>
+      </div>
+    </main>
+  </div>
+</div>
+<div id="modal-root"></div>
+<div id="toast-root" aria-live="polite"></div>
+
+<script id="engine">
+/*ENGINE-START*/
+const Engine = (() => {
+  const num = v => { const n = typeof v === 'number' ? v : parseFloat(v); return Number.isFinite(n) ? n : 0; };
+  const av = a => (a && typeof a === 'object' && 'v' in a) ? num(a.v) : num(a);
+  const sum = (arr, f) => arr.reduce((s, x) => s + f(x), 0);
+  const WEEKS = 4.33;
+
+  function amortPayment(principal, annualRatePct, months) {
+    principal = num(principal); months = Math.max(1, Math.round(num(months)) || 1);
+    const r = num(annualRatePct) / 100 / 12;
+    if (principal <= 0) return 0;
+    if (r === 0) return principal / months;
+    return principal * r / (1 - Math.pow(1 + r, -months));
+  }
+
+  function modelOf(p, key) { return p.ops.models[key || p.ops.selected] || p.ops.models.lean; }
+
+  function unitEconomics(p, opt = {}) {
+    const priceMul = opt.priceMul ?? 1, costMul = opt.costMul ?? 1;
+    const prods = (p.products || []).filter(x => num(x.mix) > 0);
+    const mixTot = sum(prods, x => num(x.mix));
+    const avgPrice = mixTot ? sum(prods, x => num(x.mix) / mixTot * num(x.price)) * priceMul : 0;
+    const avgCost = mixTot ? sum(prods, x => num(x.mix) / mixTot * num(x.unitCost)) * costMul : 0;
+    const chans = (p.channels || []).filter(c => num(c.share) > 0);
+    const chTot = sum(chans, c => num(c.share));
+    const realization = chTot ? sum(chans, c => num(c.share) / chTot * num(c.realization) / 100) : 1;
+    const delays = chTot ? chans.map(c => ({ frac: num(c.share) / chTot, months: Math.max(0, Math.round(num(c.collectDays) / 30)) })) : [{ frac: 1, months: 0 }];
+    const realizedPrice = avgPrice * realization;
+    const feePct = av(p.fin.a.paymentFee) / 100;
+    const unitVar = avgCost + realizedPrice * feePct;
+    const unitContribution = realizedPrice - unitVar;
+    return { avgPrice, avgCost, realization, realizedPrice, unitVar, unitContribution, delays, mixTot, chTot,
+      contributionMargin: realizedPrice > 0 ? unitContribution / realizedPrice : 0,
+      grossMargin: realizedPrice > 0 ? (realizedPrice - avgCost) / realizedPrice : 0 };
+  }
+
+  function run(p, opt = {}) {
+    const volMul = opt.volMul ?? 1;
+    const m = modelOf(p, opt.model);
+    const A = p.fin.a;
+    const ue = unitEconomics(p, opt);
+    const payrollTax = av(A.payrollTax) / 100;
+    const staff = m.staff || [];
+    const payroll = sum(staff, s => num(s.hours) * num(s.rate) * WEEKS) * (1 + payrollTax);
+    const staffHours = sum(staff, s => num(s.hours)) * WEEKS;
+    const ownerHours = av(A.ownerHours) * WEEKS;
+    const hpu = av(A.hoursPerUnit);
+    const laborCap = hpu > 0 ? (ownerHours + staffHours) / hpu : Infinity;
+    const equipCap = num(m.capacity) > 0 ? num(m.capacity) : Infinity;
+    const capacity = Math.min(laborCap, equipCap);
+    const marketing = sum(p.channels || [], c => num(c.spend));
+    const otherFixed = sum(p.fin.fixed || [], f => num(f.amount)) + num(m.fixed);
+    const fixedTotal = otherFixed + payroll + marketing;
+    const beUnits = ue.unitContribution > 0 ? fixedTotal / ue.unitContribution : (fixedTotal === 0 ? 0 : null);
+    const equipment = sum(m.equipment || [], e => num(e.cost));
+    const usesOther = sum(p.fin.uses || [], u => num(u.amount));
+    const uses = usesOther + equipment;
+    const funding = sum(p.fin.funding || [], f => num(f.amount));
+    const loans = (p.fin.funding || []).filter(f => f.type === 'Loan' && num(f.amount) > 0)
+      .map(f => ({ bal: num(f.amount), rate: num(f.rate) / 100 / 12, pay: amortPayment(f.amount, f.rate, f.term), left: Math.max(1, Math.round(num(f.term)) || 1) }));
+    const season = p.fin.season && p.fin.season.length === 12 ? p.fin.season : Array(12).fill(100);
+    const launch = String(p.profile.launchDate || '');
+    const startMonth = /^\d{4}-\d{2}/.test(launch) ? (parseInt(launch.slice(5, 7), 10) - 1) : 0;
+    const growth = av(A.growth) / 100;
+    const lead = av(A.leadRate) / 100, qual = av(A.qualRate) / 100, close = av(A.closeRate) / 100, rep = av(A.repeatRate) / 100, upo = av(A.unitsPerOrder);
+    const cash0 = funding - uses;
+    const months = [];
+    const receipts = Array(12 + 12).fill(0);
+    let base = 0, cash = cash0;
+    for (let i = 0; i < 12; i++) {
+      const s = num(season[(startMonth + i) % 12]) / 100;
+      const contacts = av(A.contacts) * Math.pow(1 + growth, i) * s * volMul;
+      const leads = contacts * lead, qualified = leads * qual, newCust = qualified * close;
+      const repeatOrders = base * rep;
+      const ordersDemand = newCust + repeatOrders;
+      const unitsDemand = ordersDemand * upo;
+      const units = Math.min(unitsDemand, capacity);
+      const fill = unitsDemand > 0 ? units / unitsDemand : 1;
+      base += newCust * fill;
+      const revenue = units * ue.realizedPrice;
+      const cogs = units * ue.avgCost;
+      const varCost = units * ue.unitVar;
+      const contribution = revenue - varCost;
+      const opResult = contribution - fixedTotal;
+      let interest = 0, principal = 0;
+      loans.forEach(l => { if (l.left > 0 && l.bal > 0) { const it = l.bal * l.rate; const pr = Math.min(l.bal, l.pay - it); interest += it; principal += pr; l.bal -= pr; l.left--; } });
+      ue.delays.forEach(d => { receipts[i + d.months] += revenue * d.frac; });
+      const payments = varCost + fixedTotal;
+      const debtService = interest + principal;
+      cash = cash + receipts[i] - payments - debtService;
+      months.push({ i, contacts, leads, qualified, newCust, repeatOrders, orders: ordersDemand * fill, unitsDemand, units,
+        overflow: Math.max(0, unitsDemand - units), utilization: Number.isFinite(capacity) && capacity > 0 ? units / capacity : 0,
+        revenue, cogs, varCost, contribution, fixed: fixedTotal, opResult, interest, principal, net: opResult - interest,
+        receipts: receipts[i], payments, debtService, cash });
+    }
+    const t = k => sum(months, x => x[k]);
+    const totals = { revenue: t('revenue'), cogs: t('cogs'), varCost: t('varCost'), contribution: t('contribution'), fixed: t('fixed'), opResult: t('opResult'), interest: t('interest'), net: t('net'), units: t('units'), unitsDemand: t('unitsDemand'), overflow: t('overflow'), newCust: t('newCust') };
+    const minCash = Math.min(cash0, ...months.map(x => x.cash));
+    const firstNegCash = months.findIndex(x => x.cash < 0);
+    const beMonth = months.findIndex(x => x.opResult >= 0);
+    const avgNew = totals.newCust / 12;
+    const cac = avgNew > 0 ? marketing / avgNew : (marketing > 0 ? Infinity : 0);
+    const custContribution = ue.unitContribution * upo;
+    const paybackOrders = custContribution > 0 ? cac / custContribution : null;
+    return { ue, model: m, payroll, staffHours, ownerHours, laborCap, equipCap, capacity, marketing, otherFixed, fixedTotal, beUnits,
+      equipment, uses, funding, cash0, months, totals, minCash, firstNegCash, beMonth, cac, custContribution, paybackOrders,
+      capacityShort: months.some(x => x.overflow > 0.5), startMonth };
+  }
+
+  function sensitivity(p, priceSteps = [-0.1, -0.05, 0, 0.05, 0.1], volSteps = [-0.2, -0.1, 0, 0.1, 0.2]) {
+    return volSteps.map(v => ({ vol: v, cells: priceSteps.map(pr => ({ price: pr, op: run(p, { volMul: 1 + v, priceMul: 1 + pr }).totals.opResult })) }));
+  }
+
+  function scenarios(p) {
+    const s = p.settings.scenarios;
+    return ['worst', 'base', 'best'].map(k => {
+      const o = k === 'base' ? {} : { volMul: num(s[k].vol) / 100, priceMul: num(s[k].price) / 100, costMul: num(s[k].cost) / 100 };
+      const r = run(p, o);
+      return { key: k, r };
+    });
+  }
+
+  return { run, sensitivity, scenarios, unitEconomics, amortPayment, num, av };
+})();
+/*ENGINE-END*/
+</script>
+
+<script>
+/* ---------- constants ---------- */
+const SCREENS = [
+  ['dashboard', 'Dashboard'], ['new', 'New Blueprint'], ['profile', 'Business Profile'], ['research', 'Research & Sources'],
+  ['cap', 'CAP Strategy'], ['ops', 'OPS Design'], ['fin', 'Financial Model'], ['risks', 'Risks & Compliance'],
+  ['plan', '90-Day Launch Plan'], ['report', 'Blueprint Report'], ['review', 'Consultant Review'], ['settings', 'Settings']];
+const STATUSES = ['Draft', 'Researching', 'Needs Review', 'Ready', 'Published'];
+const TAGS = ['Verified', 'Estimated', 'User input', 'Assumption'];
+const RCATS = ['Market', 'Competitors', 'Customer', 'Regulations', 'Cost Benchmarks', 'Suppliers'];
+const GROUPS = ['Setup', 'Product', 'CAP Sales', 'OPS Operations', 'Finance', 'Compliance', 'Launch'];
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MODEL_KEYS = ['lean', 'standard', 'expansion'];
+const OPS_TABS = ['Legal & Setup', 'Location & Facilities', 'Equipment', 'Suppliers & Inventory', 'Staffing', 'Workflow & SOPs', 'Capacity', 'Quality & Risk'];
+const { num, av } = Engine;
+
+/* ---------- helpers ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = (p = 'x') => p + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const clone = o => JSON.parse(JSON.stringify(o));
+const money = (v, dp = 0) => { if (v === null || v === undefined || !Number.isFinite(v)) return '—'; const s = Math.abs(v).toLocaleString('en-US', { minimumFractionDigits: dp, maximumFractionDigits: dp }); return (v < -0.0049 ? '−$' : '$') + s; };
+const n0 = v => Number.isFinite(v) ? Math.round(v).toLocaleString('en-US') : '—';
+const n1 = v => Number.isFinite(v) ? v.toLocaleString('en-US', { maximumFractionDigits: 1 }) : '—';
+const pct = v => Number.isFinite(v) ? (v * 100).toFixed(0) + '%' : '—';
+const when = iso => { if (!iso) return '—'; const d = new Date(iso); return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }); };
+const getPath = (o, path) => path.split('.').reduce((a, k) => a == null ? a : a[k], o);
+const setPath = (o, path, v) => { const ks = path.split('.'); const last = ks.pop(); const t = ks.reduce((a, k) => a[k], o); t[last] = v; };
+const monthLabel = (r, i) => MONTHS[(r.startMonth + i) % 12];
+const tagClass = t => 't-' + String(t || 'Assumption').split(' ')[0];
+const statusClass = s => 's-' + String(s).split(' ')[0];
+const ICON = {
+  save: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2.5h8l2.5 2.5v8.5h-10.5z"/><path d="M5.5 2.5v3.5h5v-3.5M5 13.5v-4h6v4"/></svg>',
+  search: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5l3.5 3.5"/></svg>',
+  calc: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.5 8a5.5 5.5 0 1 1-1.6-3.9"/><path d="M13.5 2.5v3h-3"/></svg>',
+  spark: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 1.5v4M8 10.5v4M1.5 8h4M10.5 8h4"/></svg>',
+  out: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 10V2M5 5l3-3 3 3M3 10v3.5h10V10"/></svg>',
+  share: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="4" cy="8" r="2"/><circle cx="12" cy="4" r="2"/><circle cx="12" cy="12" r="2"/><path d="M5.8 7l4.4-2M5.8 9l4.4 2"/></svg>',
+  menu: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h12M2 12h12"/></svg>',
+  chev: '<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3l5 5-5 5"/></svg>'
+};
+
+/* ---------- project templates ---------- */
+const A = (v, tag = 'Assumption', note = '') => ({ v, tag, note, src: '' });
+
+function starterProject(profile = {}) {
+  const now = new Date().toISOString();
+  const pr = Object.assign({ name: '', stage: 'startup', industry: '', subindustry: '', product: '', model: 'Home-based', country: 'United States', state: '', city: '', zip: '', radius: '', presence: 'Hybrid',
+    capital: '', targetRevenue: '', targetOwnerIncome: '', fundingPref: '', launchDate: '', currentPrices: '', experience: '', labor: '', facilities: '', equipment: '', riskTolerance: 'Medium', channels: '', compliance: '' }, profile);
+  const legal = (issue, sev, type = 'Legal requirement') => ({ id: uid('r'), issue, geography: [pr.city, pr.state].filter(Boolean).join(', ') || 'Not provided', source: '', status: 'Unverified', severity: sev, type, owner: 'Owner', mitigation: 'Verify with authority before launch.', due: '', ack: false, note: '' });
+  const task = (week, group, title, extra = {}) => Object.assign({ id: uid('t'), week, group, title, owner: 'Owner', dependsOn: '', cost: 0, duration: '1 day', evidence: '', done: false, value: 2 }, extra);
+  return {
+    id: uid('p'), name: pr.name || (pr.product ? pr.product.slice(0, 40) : 'Untitled business'), status: 'Draft', illustrative: false,
+    owner: '', createdAt: now, updatedAt: now, signedOff: null, readyForLaunch: false,
+    profile: pr,
+    sources: [], competitors: [],
+    products: [{ id: uid('s'), name: pr.product || 'Main product', price: 0, unitCost: 0, mix: 100, tag: 'Assumption' }],
+    channels: [{ id: uid('c'), name: 'Direct sales', share: 100, realization: 100, collectDays: 0, spend: 0, tag: 'Assumption' }],
+    fin: {
+      a: { contacts: A(500), growth: A(3), leadRate: A(5), qualRate: A(50), closeRate: A(20), repeatRate: A(10), unitsPerOrder: A(1),
+        paymentFee: A(3, 'Estimated', 'Typical card processing'), payrollTax: A(10, 'Estimated', 'Employer payroll taxes, approximate'), ownerHours: A(20, 'User input'), hoursPerUnit: A(0.5) },
+      fixed: [{ id: uid('f'), name: 'Insurance (general liability)', amount: 0 }, { id: uid('f'), name: 'Software & phone', amount: 0 }],
+      uses: [{ id: uid('u'), name: 'Initial inventory & supplies', amount: 0 }, { id: uid('u'), name: 'Licensing & registration (verify)', amount: 0 }],
+      funding: [{ id: uid('d'), name: 'Owner capital', type: 'Equity', amount: num(pr.capital), rate: 0, term: 0 }],
+      season: Array(12).fill(100)
+    },
+    ops: {
+      selected: 'lean', facility: pr.facilities || '', location: '', qualityPlan: '',
+      models: {
+        lean: { name: 'Lean', capacity: 200, fixed: 0, staff: [], equipment: [], tradeoffs: 'Lowest cash at risk; owner does most of the work; capacity tops out early.' },
+        standard: { name: 'Standard', capacity: 400, fixed: 0, staff: [{ id: uid('h'), role: 'Part-time helper', hours: 10, rate: 15 }], equipment: [], tradeoffs: 'More capacity and some help; higher monthly cost.' },
+        expansion: { name: 'Expansion', capacity: 1000, fixed: 0, staff: [{ id: uid('h'), role: 'Part-time staff', hours: 25, rate: 15 }], equipment: [], tradeoffs: 'Built for growth; needs proven demand and more capital.' }
+      },
+      suppliers: [],
+      sops: defaultSops(),
+      quality: [{ id: uid('q'), item: 'Written product specs and checks before each sale', done: false }, { id: uid('q'), item: 'Customer complaint log', done: false }]
+    },
+    capPlan: { customer: '', positioning: '', messaging: '', scripts: '', leadHandling: '', retention: '', kpis: '' },
+    cap: {}, capWeights: {}, recDecisions: {},
+    risks: [legal('Business registration and trade name', 'High'), legal('Federal tax ID (EIN) and state tax registration', 'High'), legal('Local business license / occupational tax', 'High'),
+      legal('Industry-specific permits or licenses', 'Critical'), legal('Sales tax collection requirements', 'High'), legal('Insurance coverage appropriate to products and sites', 'Medium', 'Recommendation')],
+    tasks: [
+      task(1, 'Setup', 'Confirm business structure and register name', { value: 4 }), task(1, 'Compliance', 'Call licensing authority to confirm required permits', { value: 5 }),
+      task(2, 'Finance', 'Open business bank account', { value: 3 }), task(2, 'Product', 'Finalize product list, specs and prices', { value: 4 }),
+      task(3, 'OPS Operations', 'Write first three SOPs', { value: 3 }), task(4, 'CAP Sales', 'Build lead list and outreach script', { value: 4 }),
+      task(5, 'CAP Sales', 'Run first 20 sales conversations', { value: 5 }), task(6, 'Finance', 'Set up bookkeeping and monthly close', { value: 2 }),
+      task(8, 'Launch', 'Soft launch to first customers', { value: 4 }), task(10, 'CAP Sales', 'Collect reviews and referrals', { value: 3 }),
+      task(12, 'Finance', 'Compare month 1–3 actuals to plan', { value: 3 }), task(13, 'Launch', 'Decide: stay lean or step up to standard model', { value: 3 })],
+    reviewDecisions: {}, reviewManual: [],
+    settings: { consultant: false, scenarios: { best: { vol: 120, price: 100, cost: 95 }, worst: { vol: 70, price: 100, cost: 110 } }, reportVariant: 'client' },
+    audit: [{ at: now, actor: '', action: 'Created blueprint', path: '', before: '', after: '' }]
+  };
+}
+
+function normalize(p) {
+  const base = starterProject(p.profile || {});
+  ['sources', 'competitors', 'products', 'channels', 'risks', 'tasks', 'audit', 'reviewManual'].forEach(k => { if (!Array.isArray(p[k])) p[k] = base[k]; });
+  const baseA = base.fin.a, baseOps = base.ops;
+  p.fin = Object.assign(base.fin, p.fin || {}); p.fin.a = Object.assign(baseA, p.fin.a || {});
+  if (!Array.isArray(p.fin.season) || p.fin.season.length !== 12) p.fin.season = Array(12).fill(100);
+  p.ops = Object.assign(baseOps, p.ops || {});
+  p.capPlan = Object.assign(base.capPlan, p.capPlan || {});
+  p.cap = p.cap || {}; CAP_PANELS.forEach(([k]) => { p.cap[k] = Object.assign({ notes: '', confidence: 'Medium' }, p.cap[k] || {}); });
+  p.capWeights = p.capWeights || {}; p.recDecisions = p.recDecisions || {}; p.reviewDecisions = p.reviewDecisions || {};
+  p.settings = Object.assign(base.settings, p.settings || {}); p.profile = Object.assign(base.profile, p.profile || {});
+  return p;
+}
+
+function defaultSops() {
+  const s = (step, trigger, owner, inputs, steps, duration, checks, escalation, records) => ({ id: uid('o'), step, trigger, owner, inputs, steps, duration, checks, escalation, records });
+  return [
+    s('Procure', 'Inventory below reorder point', 'Owner', 'Order list, supplier prices', '', '', '', '', 'Receipts'),
+    s('Produce / deliver', 'Confirmed orders for the day', 'Owner', 'Order sheet, supplies', '', '', '', '', 'Production log'),
+    s('Quality check', 'Each batch complete', 'Owner', 'Product spec', '', '', '', '', 'QC checklist'),
+    s('Fulfill', 'Order passes QC', 'Owner', 'Packaging, labels', '', '', '', '', 'Order status'),
+    s('Collect payment', 'Order fulfilled or invoiced', 'Owner', 'Invoice / POS', '', '', '', '', 'Payment record'),
+    s('Follow-up', '2 days after delivery', 'Owner', 'Customer contact', '', '', '', '', 'CRM note')];
+}
+
+function exampleProject() {
+  const p = starterProject({
+    name: 'Tucker Brownie Co. (example)', stage: 'startup', industry: 'Food & Beverage', subindustry: 'Specialty baked goods', product: 'Gourmet brownies: 6-piece boxes and wholesale trays',
+    model: 'Home-based', country: 'United States', state: 'Georgia', city: 'Tucker', zip: '30084', radius: '15', presence: 'Hybrid', capital: 3000, targetRevenue: 45000, targetOwnerIncome: 18000,
+    fundingPref: 'Owner savings plus a small microloan', launchDate: '2027-01-15', experience: 'Strong baker; new to running a business', labor: 'Owner 30 hrs/week; family help on market days',
+    facilities: 'Home kitchen', equipment: 'One home oven; needs pans, racks, packaging', riskTolerance: 'Low', channels: 'Instagram pre-orders, farmers market, coffee shops', compliance: 'Cottage food rules, labeling, sales tax, wholesale eligibility'
+  });
+  p.illustrative = true;
+  p.products = [
+    { id: uid('s'), name: 'Classic box (6 pc)', price: 18, unitCost: 5.1, mix: 50, tag: 'Assumption' },
+    { id: uid('s'), name: 'Salted caramel box (6 pc)', price: 22, unitCost: 6.4, mix: 30, tag: 'Assumption' },
+    { id: uid('s'), name: 'Wholesale tray (24 pc)', price: 42, unitCost: 13, mix: 20, tag: 'Assumption' }];
+  p.channels = [
+    { id: uid('c'), name: 'Instagram pre-orders', share: 50, realization: 100, collectDays: 0, spend: 120, tag: 'Assumption' },
+    { id: uid('c'), name: 'Farmers market', share: 30, realization: 100, collectDays: 0, spend: 0, tag: 'Assumption' },
+    { id: uid('c'), name: 'Coffee shop wholesale', share: 20, realization: 100, collectDays: 30, spend: 0, tag: 'Assumption' }];
+  Object.assign(p.fin.a, { contacts: A(1200), growth: A(5), leadRate: A(8), qualRate: A(60), closeRate: A(35), repeatRate: A(25), unitsPerOrder: A(1.6), ownerHours: A(30, 'User input'), hoursPerUnit: A(0.25) });
+  p.fin.fixed = [
+    { id: uid('f'), name: 'Farmers market booth', amount: 160 }, { id: uid('f'), name: 'Product liability insurance', amount: 45 },
+    { id: uid('f'), name: 'Online ordering site', amount: 39 }, { id: uid('f'), name: 'Phone & internet (business share)', amount: 40 },
+    { id: uid('f'), name: 'Labels & printing', amount: 35 }, { id: uid('f'), name: 'Bookkeeping software', amount: 15 }];
+  p.fin.uses = [
+    { id: uid('u'), name: 'Opening ingredients & packaging', amount: 650 }, { id: uid('u'), name: 'Branding, labels & photos', amount: 300 },
+    { id: uid('u'), name: 'Licensing & registration (verify)', amount: 150 }, { id: uid('u'), name: 'Market tent, table & signage', amount: 280 }];
+  p.fin.funding = [
+    { id: uid('d'), name: 'Owner savings', type: 'Equity', amount: 3000, rate: 0, term: 0 },
+    { id: uid('d'), name: 'Microloan (placeholder terms)', type: 'Loan', amount: 2500, rate: 9, term: 24 }];
+  p.fin.season = [80, 115, 95, 100, 110, 100, 90, 90, 100, 110, 125, 140];
+  p.ops.facility = 'Home kitchen, cottage food operation';
+  p.ops.location = 'Owner residence in Tucker, GA; markets and coffee shops within 15 miles. No street address stored.';
+  p.ops.models.lean = { name: 'Lean', capacity: 220, fixed: 0, staff: [], tradeoffs: 'Home oven only; owner bakes 30 hrs/week. Lowest cash at risk; sells out in holiday months.',
+    equipment: [{ id: uid('e'), item: 'Extra brownie pans & cooling racks', cost: 180 }, { id: uid('e'), item: 'Digital scale & thermometer', cost: 60 }, { id: uid('e'), item: 'Packaging starter stock', cost: 250 }] };
+  p.ops.models.standard = { name: 'Standard', capacity: 420, fixed: 120, staff: [{ id: uid('h'), role: 'Part-time helper (market days)', hours: 10, rate: 14 }], tradeoffs: 'Second oven doubles batch output; helper covers markets. Needs steadier demand to pay off.',
+    equipment: [{ id: uid('e'), item: 'Second countertop convection oven', cost: 650 }, { id: uid('e'), item: 'Extra pans, racks & sheet trays', cost: 320 }, { id: uid('e'), item: 'Packaging starter stock', cost: 400 }, { id: uid('e'), item: 'Digital scale & thermometer', cost: 60 }] };
+  p.ops.models.expansion = { name: 'Expansion', capacity: 1200, fixed: 950, staff: [{ id: uid('h'), role: 'Baker / packer', hours: 25, rate: 15 }], tradeoffs: 'Shared commercial kitchen rental opens wholesale fully. Highest fixed cost; requires a commercial food permit.',
+    equipment: [{ id: uid('e'), item: 'Commercial kitchen deposit', cost: 1500 }, { id: uid('e'), item: 'Sheet pans, racks & tools', cost: 600 }, { id: uid('e'), item: 'Packaging stock', cost: 800 }] };
+  p.ops.suppliers = [
+    { id: uid('v'), name: 'Warehouse club (local)', item: 'Butter, sugar, eggs, flour', cost: 'Varies', lead: 0, note: 'Placeholder; confirm prices' },
+    { id: uid('v'), name: 'Restaurant supply store', item: 'Chocolate, cocoa', cost: 'Varies', lead: 2, note: 'Placeholder' },
+    { id: uid('v'), name: 'Online packaging supplier', item: 'Boxes, liners, labels', cost: 'Varies', lead: 7, note: 'Order 3 weeks of stock at a time' }];
+  p.ops.sops[1].steps = 'Pull orders at 7am. Bake by flavor in batches of 24. Cool 2 hrs before cutting.'; p.ops.sops[1].duration = '4–5 hrs per bake day';
+  p.ops.sops[2].steps = 'Check size, edges and texture against spec photo. Pull any underbaked pieces.'; p.ops.sops[2].checks = 'Weight within 5%; label matches flavor and allergens'; p.ops.sops[2].escalation = 'Hold batch; owner decides remake';
+  p.ops.sops[3].steps = 'Box, seal, label with required cottage food statement, stage by pickup time.'; p.ops.sops[3].duration = '20 min per 10 boxes';
+  p.ops.sops[4].steps = 'Card or app payment at pickup; coffee shops invoiced net 30.'; p.ops.sops[4].escalation = 'Unpaid after 35 days: call, then pause deliveries';
+  p.ops.sops[5].steps = 'Thank-you text with reorder link and review request.'; p.ops.sops[5].duration = '5 min per order';
+  p.sources = [
+    { id: uid('e'), category: 'Market', claim: 'Weekend farmers market foot traffic in Tucker area', value: 'Not yet measured', title: 'Market manager conversation (to schedule)', url: '', date: '', accessed: '', location: 'Tucker, GA', confidence: 'Low', kind: 'Assumption', flagged: false },
+    { id: uid('e'), category: 'Regulations', claim: 'Cottage food license may limit wholesale sales to retail shops', value: 'Unconfirmed', title: 'Georgia Department of Agriculture: to verify', url: '', date: '', accessed: '', location: 'Georgia', confidence: 'Low', kind: 'Assumption', flagged: false },
+    { id: uid('e'), category: 'Cost Benchmarks', claim: 'Ingredient + packaging cost per 6-piece box', value: '$5.10', title: 'Owner recipe costing sheet', url: '', date: '2026-10-01', accessed: '', location: 'Tucker, GA', confidence: 'Medium', kind: 'User input', flagged: false }];
+  p.fin.a.unitsPerOrder.src = '';
+  p.competitors = [
+    { id: uid('k'), name: 'Local bakery (example A)', location: 'Within 5 miles', price: 24, note: 'Sells brownies by the dozen; no delivery', src: '' },
+    { id: uid('k'), name: 'Grocery bakery case (example B)', location: 'Within 3 miles', price: 9, note: 'Low price, mass-produced', src: '' }];
+  p.capPlan = {
+    customer: 'Busy parents and office organizers within 15 miles who buy treats for events and gifts; coffee shops wanting a local pastry.',
+    positioning: 'Small-batch brownies made in Tucker, ready for pickup or your next event.',
+    messaging: 'Fresh this week. Pre-order by Thursday for weekend pickup. Gift boxes for teachers, teams and holidays.',
+    scripts: 'DM reply: "Thanks for asking! This week we have Classic and Salted Caramel. Want a box for Saturday pickup? Here is the order link."',
+    leadHandling: 'Owner replies to DMs and texts within 2 hours, 8am–8pm. Every inquiry logged in a simple sheet.',
+    retention: 'Reorder text 10 days after purchase; punch card at market (6th box free); holiday pre-order list.',
+    kpis: 'Weekly: orders, boxes sold, repeat %, DM-to-order rate. Monthly: contribution, cash balance.'
+  };
+  p.risks = [
+    { id: uid('r'), issue: 'Cottage food license or registration for home production', geography: 'Georgia', source: 'Georgia Department of Agriculture (to verify)', status: 'Unverified', severity: 'Critical', type: 'Legal requirement', owner: 'Owner', mitigation: 'Verify with authority; apply before first sale.', due: '2026-12-01', ack: false, note: '' },
+    { id: uid('r'), issue: 'Whether cottage food rules allow wholesale to coffee shops', geography: 'Georgia', source: 'Conflicting: owner heard yes, source note says may be limited', status: 'Unverified', severity: 'Critical', type: 'Legal requirement', owner: 'Owner', mitigation: 'Verify with authority. If not allowed, move wholesale share to direct sales or the Expansion model.', due: '2026-12-01', ack: false, note: 'Conflicting guidance' },
+    { id: uid('r'), issue: 'Label requirements (statement of home production, ingredients, allergens)', geography: 'Georgia', source: '', status: 'Unverified', severity: 'High', type: 'Legal requirement', owner: 'Owner', mitigation: 'Verify with authority; print compliant labels.', due: '2026-12-15', ack: false, note: '' },
+    { id: uid('r'), issue: 'Sales tax registration and collection', geography: 'Georgia / DeKalb County', source: '', status: 'Unverified', severity: 'High', type: 'Legal requirement', owner: 'Owner', mitigation: 'Verify with Georgia Department of Revenue. Prices in this model exclude sales tax.', due: '2026-12-15', ack: false, note: '' },
+    { id: uid('r'), issue: 'City of Tucker business license for home business', geography: 'Tucker, GA', source: '', status: 'Unverified', severity: 'High', type: 'Legal requirement', owner: 'Owner', mitigation: 'Verify with authority.', due: '2026-12-15', ack: false, note: '' },
+    { id: uid('r'), issue: 'Product liability insurance', geography: 'All', source: '', status: 'Unverified', severity: 'Medium', type: 'Recommendation', owner: 'Owner', mitigation: 'Get two quotes; many markets require proof.', due: '2027-01-05', ack: false, note: '' },
+    { id: uid('r'), issue: 'Holiday demand above home-oven capacity', geography: 'All', source: 'Financial model', status: 'Verified', severity: 'Medium', type: 'Recommendation', owner: 'Owner', mitigation: 'Pre-order cutoffs in Nov–Dec; consider Standard model by Q4.', due: '2027-09-01', ack: false, note: '' }];
+  p.tasks = [
+    { week: 1, group: 'Compliance', title: 'Call Georgia Dept. of Agriculture: cottage food license and wholesale question', value: 5, cost: 0, duration: '1 hr' },
+    { week: 1, group: 'Setup', title: 'Register trade name and get EIN', value: 4, cost: 0, duration: '2 hrs' },
+    { week: 1, group: 'Product', title: 'Lock recipes and cost each box', value: 4, cost: 0, duration: '1 day', evidence: 'Recipe costing sheet' },
+    { week: 2, group: 'Compliance', title: 'Apply for cottage food license', value: 5, cost: 150, duration: '2 hrs', dependsOn: 'Call Georgia Dept. of Agriculture: cottage food license and wholesale question' },
+    { week: 2, group: 'Finance', title: 'Open business bank account and payment app', value: 3, cost: 0, duration: '2 hrs' },
+    { week: 3, group: 'Product', title: 'Design compliant labels and order packaging', value: 3, cost: 550, duration: '3 days', dependsOn: 'Apply for cottage food license' },
+    { week: 3, group: 'Finance', title: 'Apply for microloan', value: 3, cost: 0, duration: '1 week' },
+    { week: 4, group: 'CAP Sales', title: 'Set up Instagram shop page and pre-order form', value: 4, cost: 39, duration: '2 days' },
+    { week: 4, group: 'CAP Sales', title: 'Reserve farmers market booth', value: 4, cost: 160, duration: '1 hr' },
+    { week: 5, group: 'OPS Operations', title: 'Buy pans, racks, scale', value: 3, cost: 240, duration: '1 day' },
+    { week: 5, group: 'OPS Operations', title: 'Practice bake day using SOPs; time each step', value: 3, cost: 60, duration: '1 day' },
+    { week: 6, group: 'CAP Sales', title: 'Pitch 5 coffee shops (only if wholesale is confirmed allowed)', value: 4, cost: 0, duration: '1 week', dependsOn: 'Call Georgia Dept. of Agriculture: cottage food license and wholesale question' },
+    { week: 7, group: 'Launch', title: 'Soft launch: friends & family pre-orders', value: 4, cost: 100, duration: '1 week' },
+    { week: 8, group: 'Launch', title: 'First farmers market Saturday', value: 5, cost: 0, duration: '1 day' },
+    { week: 10, group: 'CAP Sales', title: 'Start reorder texts and punch cards', value: 3, cost: 20, duration: '1 day' },
+    { week: 12, group: 'Finance', title: 'Compare actual orders and costs to the model', value: 3, cost: 0, duration: '2 hrs' },
+    { week: 13, group: 'Launch', title: 'Decide on Standard model for holiday season', value: 3, cost: 0, duration: '1 hr' }
+  ].map(t => Object.assign({ id: uid('t'), owner: 'Owner', dependsOn: '', evidence: '', done: false }, t));
+  p.tasks.forEach(t => { if (t.dependsOn) { const d = p.tasks.find(x => x.title === t.dependsOn); t.dependsOn = d ? d.id : ''; } });
+  p.status = 'Draft';
+  return p;
+}
+
+/* ---------- CAP rules (transparent, configurable) ---------- */
+const CAP_PANELS = [
+  ['mci', 'Market & Customer Intelligence', ['Market', 'Customer', 'Competitors']],
+  ['mkt', 'Marketing & Acquisition', ['Customer']],
+  ['sal', 'Sales Conversion', ['Customer']],
+  ['rev', 'Revenue Economics', ['Cost Benchmarks', 'Competitors']],
+  ['ret', 'Retention & Expansion', ['Customer']],
+  ['del', 'Delivery Alignment', ['Suppliers', 'Cost Benchmarks']],
+  ['gfr', 'Growth & Financial Readiness', ['Market']]];
+const has = s => String(s || '').trim().length > 3;
+const CAP_RULES = [
+  { id: 'mci1', panel: 'mci', pts: 2, text: 'At least one verified market source', test: p => p.sources.some(s => s.category === 'Market' && s.kind === 'Verified' && !s.flagged), action: 'Add a dated, verified market source for your area (Research & Sources).' },
+  { id: 'mci2', panel: 'mci', pts: 1, text: 'Target customer described', test: p => has(p.capPlan.customer), action: 'Describe who buys, where they are, and why they buy.' },
+  { id: 'mci3', panel: 'mci', pts: 1, text: 'Two or more competitors recorded', test: p => p.competitors.length >= 2, action: 'Record at least two competitors with their prices.' },
+  { id: 'mci4', panel: 'mci', pts: 1, text: 'Your price compared with competitor prices', test: p => p.competitors.some(c => num(c.price) > 0), action: 'Add competitor prices so pricing can be checked.' },
+  { id: 'mkt1', panel: 'mkt', pts: 1, text: 'Two or more acquisition channels', test: p => p.channels.filter(c => num(c.share) > 0).length >= 2, action: 'Add a second channel so sales do not depend on one source.' },
+  { id: 'mkt2', panel: 'mkt', pts: 2, text: 'Acquisition cost recovered within 2 orders', test: (p, r) => r.paybackOrders !== null && r.paybackOrders <= 2, action: 'Lower paid spend or raise contribution per order until a new customer pays back within 2 orders.' },
+  { id: 'mkt3', panel: 'mkt', pts: 1, text: 'Marketing spend at or below 15% of revenue', test: (p, r) => r.totals.revenue > 0 && r.marketing * 12 <= 0.15 * r.totals.revenue, action: 'Bring marketing spend under 15% of revenue or show why more is needed.' },
+  { id: 'mkt4', panel: 'mkt', pts: 1, text: 'Positioning and messaging written', test: p => has(p.capPlan.positioning) && has(p.capPlan.messaging), action: 'Write a one-line positioning statement and the core message.' },
+  { id: 'sal1', panel: 'sal', pts: 2, text: 'Close rate at or above 20% of qualified leads', test: p => av(p.fin.a.closeRate) >= 20, action: 'Tighten the offer and follow-up to close at least 20% of qualified leads.', whatIf: p => { p.fin.a.closeRate.v = 20; } },
+  { id: 'sal2', panel: 'sal', pts: 1, text: 'Sales script written', test: p => has(p.capPlan.scripts), action: 'Write the reply script for the most common inquiry.' },
+  { id: 'sal3', panel: 'sal', pts: 1, text: 'Lead handling defined (who replies, how fast)', test: p => has(p.capPlan.leadHandling), action: 'Name who answers leads and the response time target.' },
+  { id: 'rev1', panel: 'rev', pts: 2, text: 'Contribution margin at or above 50%', test: (p, r) => r.ue.contributionMargin >= 0.5, action: 'Raise price or cut unit cost until contribution margin reaches 50%.', whatIf: p => { p.products.forEach(x => { x.price = num(x.price) * 1.1; }); }, whatIfLabel: 'prices +10%' },
+  { id: 'rev2', panel: 'rev', pts: 2, text: 'Break-even volume at or below 70% of capacity', test: (p, r) => r.beUnits !== null && Number.isFinite(r.capacity) && r.beUnits <= 0.7 * r.capacity, action: 'Lower fixed costs or raise unit contribution so break-even sits well inside capacity.' },
+  { id: 'rev3', panel: 'rev', pts: 1, text: '12-month revenue meets the target', test: (p, r) => num(p.profile.targetRevenue) > 0 && r.totals.revenue >= num(p.profile.targetRevenue), action: 'Close the gap to target revenue with more channels, higher prices or a larger model, or reset the target.' },
+  { id: 'ret1', panel: 'ret', pts: 2, text: 'Monthly repeat rate at or above 20%', test: p => av(p.fin.a.repeatRate) >= 20, action: 'Add a reorder reminder and loyalty offer to lift monthly repeat purchases to 20%.', whatIf: p => { p.fin.a.repeatRate.v = 20; } },
+  { id: 'ret2', panel: 'ret', pts: 1, text: 'Retention plan written', test: p => has(p.capPlan.retention), action: 'Write how customers are brought back (reminders, loyalty, subscriptions).' },
+  { id: 'del1', panel: 'del', pts: 2, text: 'Demand fits capacity every month', test: (p, r) => !r.capacityShort, action: 'Demand exceeds capacity: add pre-order cutoffs, raise prices, or step up the operating model.' },
+  { id: 'del2', panel: 'del', pts: 1, text: 'Peak utilization between 50% and 90%', test: (p, r) => { const u = Math.max(...r.months.map(x => x.utilization)); return u >= 0.5 && u <= 0.9; }, action: 'Match the operating model to demand so peak months use 50–90% of capacity.' },
+  { id: 'del3', panel: 'del', pts: 1, text: 'At least four SOPs filled in', test: p => p.ops.sops.filter(s => has(s.steps)).length >= 4, action: 'Write steps for at least four of the six workflow SOPs.' },
+  { id: 'gfr1', panel: 'gfr', pts: 2, text: 'Cash stays positive all 12 months', test: (p, r) => r.firstNegCash === -1 && r.cash0 >= 0, action: 'Add funding, cut startup spend, or delay fixed costs so cash never goes below zero.' },
+  { id: 'gfr2', panel: 'gfr', pts: 2, text: 'Funding covers startup uses', test: (p, r) => r.funding >= r.uses, action: 'Line up funding equal to startup uses before launch.' },
+  { id: 'gfr3', panel: 'gfr', pts: 1, text: 'Operating result positive by month 9', test: (p, r) => r.beMonth >= 0 && r.beMonth <= 8, action: 'Reach a positive monthly operating result by month 9.' }];
+
+function capScores(p, r) {
+  const out = {};
+  CAP_PANELS.forEach(([k]) => { out[k] = { pts: 0, max: 0, rules: [] }; });
+  CAP_RULES.forEach(rule => {
+    const w = p.capWeights[rule.id] ?? rule.pts;
+    let pass = false; try { pass = !!rule.test(p, r); } catch (e) { pass = false; }
+    const o = out[rule.panel]; o.max += num(w); if (pass) o.pts += num(w);
+    o.rules.push({ rule, w: num(w), pass });
+  });
+  Object.values(out).forEach(o => { o.score = o.max > 0 ? Math.round(o.pts / o.max * 100) : 0; });
+  return out;
+}
+function whatIfImpact(p, r, rule) {
+  if (!rule.whatIf) return null;
+  const q = clone(p); rule.whatIf(q);
+  return Engine.run(q).totals.opResult - r.totals.opResult;
+}
+
+/* ---------- consistency checks → review queue ---------- */
+function reviewItems(p, r) {
+  const items = [];
+  const add = (id, kind, text, blocking, detail = '') => items.push({ id, kind, text, blocking, detail });
+  const labels = { contacts: 'Monthly contacts', leadRate: 'Lead rate', qualRate: 'Qualified rate', closeRate: 'Close rate', repeatRate: 'Repeat rate', unitsPerOrder: 'Units per order', growth: 'Contact growth', hoursPerUnit: 'Labor hours per unit' };
+  Object.entries(labels).forEach(([k, l]) => { const a = p.fin.a[k]; if (a && a.tag === 'Assumption' && !a.src) add('assume-' + k, 'Unsupported assumption', `${l} (${a.v}) is a model assumption with no source.`, false, 'Attach a source or confirm as user input.'); });
+  p.products.forEach(x => { if (x.tag === 'Assumption') add('prod-' + x.id, 'Unsupported assumption', `Price/cost for “${x.name}” is an assumption.`, false); });
+  if (r.ue.unitContribution <= 0) add('neg-contrib', 'Financial anomaly', `Each unit loses ${money(-r.ue.unitContribution, 2)} after variable costs. No break-even is possible.`, true);
+  if (r.cash0 < 0 || r.firstNegCash >= 0) add('neg-cash', 'Financial anomaly', r.cash0 < 0 ? `Startup uses exceed funding by ${money(-r.cash0)} before the first month.` : `Cash goes negative in month ${r.firstNegCash + 1} (${monthLabel(r, r.firstNegCash)}). Lowest balance ${money(r.minCash)}.`, true);
+  if (r.capacityShort) { const worst = r.months.reduce((a, b) => b.overflow > a.overflow ? b : a); add('capacity', 'Financial anomaly', `Demand exceeds capacity in ${r.months.filter(x => x.overflow > 0.5).length} month(s); worst is ${monthLabel(r, worst.i)} with ${n0(worst.overflow)} units unserved. Sales were capped at capacity.`, true, 'Alternatives: pre-order cutoffs, higher prices, or a larger operating model.'); }
+  p.risks.filter(x => x.severity === 'Critical' && x.status === 'Unverified').forEach(x => add('risk-' + x.id, 'Critical compliance item', `${x.issue} (${x.geography}) is unverified.`, true, x.note));
+  if (num(p.profile.targetRevenue) > 0 && r.totals.revenue < 0.5 * num(p.profile.targetRevenue)) add('target-gap', 'Conflicting recommendation', `Plan revenue ${money(r.totals.revenue)} is under half of the ${money(num(p.profile.targetRevenue))} target.`, false, 'Either the target or the acquisition plan needs to change.');
+  if (r.funding < r.uses) add('funding-gap', 'Financial anomaly', `Funding ${money(r.funding)} is short of startup uses ${money(r.uses)}.`, true);
+  p.sources.filter(s => s.flagged).forEach(s => add('src-' + s.id, 'Unsupported assumption', `Source marked incorrect: “${s.title || s.claim}”.`, false));
+  (p.reviewManual || []).forEach(m => add(m.id, m.kind, m.text, !!m.blocking));
+  return items;
+}
+function openBlocking(p, items) { return items.filter(i => i.blocking && !['Approve', 'Reject'].includes(p.reviewDecisions[i.id]?.status)); }
+function riskGate(p) {
+  const crit = p.risks.filter(x => x.severity === 'Critical');
+  const open = crit.filter(x => x.status === 'Unverified' && !x.ack);
+  return { open, pass: open.length === 0 };
+}
+
+/* ---------- state ---------- */
+const S = { projects: {}, order: [], cur: null, screen: 'dashboard', tab: { research: 'Market', ops: 'Legal & Setup', fin: 'Assumptions' }, wiz: { step: 1, data: {} },
+  db: null, user: null, me: null, dl: null, storeMode: 'loading', loaded: false, saveState: {}, dirty: {}, remote: {}, navOpen: false, expanded: {}, versions: {} };
+const P = () => S.projects[S.cur] || null;
+
+function persistLocal() { try { localStorage.setItem('mbb.projects', JSON.stringify(S.projects)); } catch (e) {} }
+function loadLocal() { try { const j = localStorage.getItem('mbb.projects'); return j ? JSON.parse(j) : {}; } catch (e) { return {}; } }
+function remember(k, v) { try { localStorage.setItem('mbb.' + k, v); } catch (e) {} }
+function recall(k) { try { return localStorage.getItem('mbb.' + k); } catch (e) { return null; } }
+
+const saveTimers = {};
+function markDirty(p, auditEntry) {
+  p.updatedAt = new Date().toISOString();
+  if (auditEntry) logAudit(p, auditEntry);
+  S.dirty[p.id] = true; S.saveState[p.id] = 'pending';
+  clearTimeout(saveTimers[p.id]);
+  saveTimers[p.id] = setTimeout(() => saveProject(p.id), 900);
+  renderLive('save');
+}
+async function saveProject(id) {
+  const p = S.projects[id]; if (!p) return;
+  S.saveState[id] = 'saving'; renderLive('save');
+  if (p.audit.length > 400) p.audit = p.audit.slice(-400);
+  const stamp = p.updatedAt;
+  try {
+    if (S.db) await S.db.doc('projects/' + id).set(clone(p));
+    else persistLocal();
+    if (S.projects[id] && S.projects[id].updatedAt === stamp) { S.dirty[id] = false; S.saveState[id] = 'saved:' + new Date().toISOString(); }
+  } catch (e) {
+    S.saveState[id] = 'error:' + (e && e.code === 'quota_exceeded' ? 'Storage is full. Archive or delete old blueprints.' : 'Could not save. Your changes are still here.');
+  }
+  renderLive('save');
+}
+function logAudit(p, e) {
+  const last = p.audit[p.audit.length - 1];
+  const at = new Date().toISOString();
+  if (last && e.path && last.path === e.path && last.actor === (S.me || '') && (Date.parse(at) - Date.parse(last.at)) < 15000 && !e.reason) { last.after = e.after; last.at = at; return; }
+  p.audit.push(Object.assign({ at, actor: S.me || '' }, e));
+}
+
+/* ---------- boot ---------- */
+async function boot() {
+  S.screen = (location.hash || '').slice(1) || recall('screen') || 'dashboard';
+  if (!SCREENS.some(s => s[0] === S.screen)) S.screen = 'dashboard';
+  render();
+  const c = window.claude;
+  const [db, user, dl] = await Promise.all([c?.use ? c.use('db').catch(() => null) : null, c?.use ? c.use('user').catch(() => null) : null, c?.use ? c.use('downloads').catch(() => null) : null]);
+  S.db = db; S.user = user; S.dl = dl;
+  if (user) { try { S.me = await user.id(); } catch (e) {} }
+  if (db) {
+    S.storeMode = 'shared';
+    db.collection('projects').onSnapshot(snap => {
+      snap.docs.forEach(d => {
+        if (!d.exists) return; const data = d.data(); if (!data || !data.id) return;
+        const local = S.projects[data.id];
+        if (local && S.dirty[data.id]) { if (data.updatedAt > local.updatedAt) { S.remote[data.id] = clone(data); renderBanners(); } return; }
+        if (!local || (data.updatedAt || '') > (local.updatedAt || '')) S.projects[data.id] = normalize(clone(data));
+      });
+      snap.docChanges().forEach(ch => { if (ch.type === 'removed' && S.projects[ch.doc.id] && !S.dirty[ch.doc.id]) delete S.projects[ch.doc.id]; });
+      S.loaded = true;
+      if (!S.cur || !S.projects[S.cur]) S.cur = recall('cur') && S.projects[recall('cur')] ? recall('cur') : sortedProjects()[0]?.id || null;
+      if (!d_activeInput()) render(); else { renderSide(); renderBar(); }
+    }, err => { S.storeMode = 'local'; S.projects = loadLocal(); Object.values(S.projects).forEach(normalize); S.loaded = true; render(); });
+  } else {
+    S.storeMode = 'local'; S.projects = loadLocal(); Object.values(S.projects).forEach(normalize); S.loaded = true;
+    S.cur = recall('cur') && S.projects[recall('cur')] ? recall('cur') : sortedProjects()[0]?.id || null;
+    render();
+  }
+}
+function d_activeInput() { const a = document.activeElement; return a && a.matches && a.matches('input,textarea,select') && a.closest('#content'); }
+function sortedProjects() { return Object.values(S.projects).filter(p => !p.archived).sort((a, b) => (b.updatedAt || '').localeCompare(a.updatedAt || '')); }
+
+/* ---------- render shell ---------- */
+function render() { renderSide(); renderBar(); renderBanners(); renderContent(); }
+function go(screen) { S.screen = screen; S.navOpen = false; $('#app').classList.remove('open'); remember('screen', screen); try { history.replaceState(null, '', '#' + screen); } catch (e) {} render(); window.scrollTo(0, 0); $('#content').focus?.(); }
+
+function renderSide() {
+  const p = P(); let flag = 0;
+  if (p) { try { const r = Engine.run(p); flag = openBlocking(p, reviewItems(p, r)).length; } catch (e) {} }
+  $('#side').innerHTML = `
+    <div class="brand"><b>Mete Business Blueprint</b><span>Mete Business Consulting</span></div>
+    <nav class="nav">${SCREENS.map(([k, l], i) => `<button data-act="go" data-v="${k}" ${S.screen === k ? 'aria-current="page"' : ''}><span class="n">${String(i + 1).padStart(2, '0')}</span>${l}${k === 'review' && flag ? `<span class="dot" title="${flag} blocking item(s)"></span>` : ''}</button>`).join('')}</nav>
+    <div class="side-foot">${S.storeMode === 'shared' ? 'Projects save to this page and are shared with everyone who can open it.' : S.storeMode === 'local' ? 'Saving in this browser only.' : 'Connecting…'}</div>`;
+}
+
+function saveLabel(p) {
+  if (!p) return '';
+  const s = S.saveState[p.id] || '';
+  if (s === 'pending' || s === 'saving') return 'Saving…';
+  if (s.startsWith('error:')) return `<span style="color:var(--danger)">${esc(s.slice(6))}</span> <button class="btn sm" data-act="save-now">Retry</button>`;
+  return 'Saved ' + when(s.startsWith('saved:') ? s.slice(6) : p.updatedAt);
+}
+function renderBar() {
+  const p = P(); const list = sortedProjects();
+  $('#bar').innerHTML = `
+    <button class="btn ghost menu-btn" data-act="menu" aria-label="Open sections menu">${ICON.menu}</button>
+    <div class="proj">
+      ${list.length ? `<label class="label" for="proj-pick" style="white-space:nowrap">Project</label>
+      <select id="proj-pick" data-act-change="pick">${list.map(x => `<option value="${esc(x.id)}" ${x.id === S.cur ? 'selected' : ''}>${esc(x.name)}</option>`).join('')}</select>
+      ${p ? `<span class="chip ${statusClass(p.status)}">${esc(p.status)}</span>${p.illustrative ? '<span class="illus">Illustrative</span>' : ''}` : ''}` : '<span class="muted small">No blueprint open</span>'}
+      <span class="save" data-live="save">${saveLabel(p)}</span>
+    </div>
+    <div class="actions">
+      <button class="btn" data-act="save-now" ${p ? '' : 'disabled'}>${ICON.save}Save</button>
+      <button class="btn" data-act="research" ${p ? '' : 'disabled'}>${ICON.search}Research</button>
+      <button class="btn" data-act="recalc" ${p ? '' : 'disabled'}>${ICON.calc}Recalculate</button>
+      <button class="btn brass" data-act="generate" ${p ? '' : 'disabled'}>${ICON.spark}Generate Blueprint</button>
+      <button class="btn" data-act="go" data-v="report" ${p ? '' : 'disabled'}>${ICON.out}Export</button>
+      <button class="btn" data-act="share" ${p ? '' : 'disabled'}>${ICON.share}Share</button>
+    </div>`;
+}
+function renderBanners() {
+  const out = [];
+  if (S.storeMode === 'local' && S.loaded) out.push(`<div class="banner warn"><b>Shared saving is not available in this view.</b> Changes are kept in this browser only and other people will not see them.</div>`);
+  const p = P();
+  if (p && S.remote[p.id]) out.push(`<div class="banner info"><b>Someone else saved this blueprint while you were editing.</b> <button class="btn sm" data-act="remote-keep">Keep my version</button><button class="btn sm" data-act="remote-load">Load their version</button></div>`);
+  $('#banners').innerHTML = out.join('');
+}
+
+/* ---------- live regions ---------- */
+const LIVE = {};
+function renderLive(which) {
+  document.querySelectorAll('[data-live]').forEach(el => {
+    const k = el.dataset.live;
+    if (which && k !== which && which !== '*') return;
+    if (k === 'save') { el.innerHTML = saveLabel(P()); return; }
+    if (LIVE[k]) el.innerHTML = LIVE[k]();
+  });
+}
+
+/* ---------- field builders ---------- */
+function fld(label, path, o = {}) {
+  const p = P(); const v = getPath(p, path);
+  const id = 'f-' + path.replace(/\./g, '-');
+  let input;
+  const dis = o.disabled ? 'disabled' : '';
+  if (o.type === 'textarea') input = `<textarea id="${id}" data-path="${path}" rows="${o.rows || 3}" ${dis}>${esc(v)}</textarea>`;
+  else if (o.type === 'select') input = `<select id="${id}" data-path="${path}" ${dis}>${o.options.map(x => { const [val, lab] = Array.isArray(x) ? x : [x, x]; return `<option value="${esc(val)}" ${String(v) === String(val) ? 'selected' : ''}>${esc(lab)}</option>`; }).join('')}</select>`;
+  else input = `<input id="${id}" type="${o.type === 'num' ? 'number' : (o.type || 'text')}" ${o.type === 'num' ? `step="${o.step || 'any'}" data-num="1"` : ''} data-path="${path}" value="${esc(v ?? '')}" placeholder="${esc(o.ph || (o.type === 'num' ? '' : 'Not provided'))}" ${dis}>`;
+  return `<div class="f"><label class="label" for="${id}">${esc(label)}${o.req ? ' <span class="req" aria-label="required">*</span>' : ''}</label>
+    ${o.prefix || o.suffix ? `<div class="row">${o.prefix ? `<span class="affix">${o.prefix}</span>` : ''}${input}${o.suffix ? `<span class="affix">${o.suffix}</span>` : ''}</div>` : input}
+    ${o.help ? `<div class="help">${o.help}</div>` : ''}</div>`;
+}
+function tagSelect(path, v) { return `<select class="tagsel" data-path="${path}" aria-label="Evidence type">${TAGS.map(t => `<option ${t === v ? 'selected' : ''}>${t}</option>`).join('')}</select>`; }
+function assume(key, label, o = {}) {
+  const p = P(); const a = p.fin.a[key];
+  const base = 'fin.a.' + key;
+  return `<div class="f"><div class="between"><label class="label" for="f-${base.replace(/\./g, '-')}-v">${esc(label)}</label>${tagSelect(base + '.tag', a.tag)}</div>
+    <div class="row">${o.prefix ? `<span class="affix">${o.prefix}</span>` : ''}<input id="f-${base.replace(/\./g, '-')}-v" type="number" step="any" data-num="1" data-path="${base}.v" value="${esc(a.v)}">${o.suffix ? `<span class="affix">${o.suffix}</span>` : ''}</div>
+    <div class="row"><select class="tagsel" data-path="${base}.src" aria-label="Source for ${esc(label)}" style="flex:1;width:100%!important"><option value="">No source attached</option>${p.sources.map(s => `<option value="${esc(s.id)}" ${a.src === s.id ? 'selected' : ''}>${esc((s.title || s.claim).slice(0, 60))}</option>`).join('')}</select></div>
+    ${o.help ? `<div class="help">${o.help}</div>` : ''}</div>`;
+}
+function tableEditor(arrPath, cols, o = {}) {
+  const p = P(); const arr = getPath(p, arrPath) || [];
+  return `<div class="tw"><table><thead><tr>${cols.map(c => `<th class="${c.type === 'num' ? 'n' : ''}">${esc(c.label)}</th>`).join('')}<th><span class="sr" style="position:absolute;left:-9999px">Remove</span></th></tr></thead><tbody>
+    ${arr.map((row, i) => `<tr>${cols.map(c => {
+      const path = `${arrPath}.${i}.${c.key}`; const v = row[c.key];
+      if (c.render) return `<td class="${c.type === 'num' ? 'n' : ''}">${c.render(row, i)}</td>`;
+      if (c.type === 'select') return `<td><select data-path="${path}" aria-label="${esc(c.label)}">${c.options.map(x => `<option ${String(x) === String(v) ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select></td>`;
+      if (c.type === 'tag') return `<td>${tagSelect(path, v)}</td>`;
+      if (c.type === 'check') return `<td><input type="checkbox" data-path="${path}" ${v ? 'checked' : ''} aria-label="${esc(c.label)}"></td>`;
+      if (c.type === 'num') return `<td class="n"><input class="w-num" type="number" step="any" data-num="1" data-path="${path}" value="${esc(v)}" aria-label="${esc(c.label)}"></td>`;
+      if (c.type === 'textarea') return `<td style="min-width:${c.w || 200}px"><textarea rows="2" data-path="${path}" aria-label="${esc(c.label)}">${esc(v)}</textarea></td>`;
+      return `<td style="min-width:${c.w || 140}px"><input type="${c.type || 'text'}" data-path="${path}" value="${esc(v)}" aria-label="${esc(c.label)}"></td>`;
+    }).join('')}<td><button class="btn ghost sm" data-act="row-del" data-path="${arrPath}" data-i="${i}" aria-label="Remove row">Remove</button></td></tr>`).join('')}
+    ${arr.length ? '' : `<tr><td colspan="${cols.length + 1}" class="muted">Nothing here yet.</td></tr>`}
+    ${o.footer || ''}
+    </tbody></table></div>
+    <div><button class="btn sm" data-act="row-add" data-path="${arrPath}" data-tpl="${esc(JSON.stringify(o.tpl || {}))}">+ ${esc(o.addLabel || 'Add row')}</button></div>`;
+}
+function needProject() {
+  return `<div class="empty"><h2>No blueprint open</h2><p class="muted">Create a blueprint or open one from the dashboard.</p><div class="flex" style="justify-content:center"><button class="btn primary" data-act="go" data-v="new">Create First Blueprint</button><button class="btn" data-act="load-example">Load illustrative example</button></div></div>`;
+}
+function headHTML(title, sub, right = '', noProj) {
+  const p = noProj ? null : P();
+  return `<div class="head"><div class="t"><div class="eyebrow">${p ? esc(p.name) : 'Mete Business Consulting'}</div><h1>${esc(title)}</h1>${sub ? `<p class="muted">${sub}</p>` : ''}</div>${right ? `<div class="flex">${right}</div>` : ''}</div>
+  ${p && p.illustrative ? `<div class="note brass"><b>Illustrative example.</b> Every number in this blueprint is sample data for a specialty brownie business in Tucker, Georgia. Replace it with real figures before relying on it.</div>` : ''}`;
+}
+
+/* ---------- charts ---------- */
+function lineChart(series, o = {}) {
+  const W = 640, H = o.h || 220, L = 56, R = 12, T = 12, B = 26;
+  const all = series.flatMap(s => s.data).concat(o.extraY || []);
+  let lo = Math.min(0, ...all), hi = Math.max(0, ...all); if (hi === lo) hi = lo + 1;
+  const step = niceStep((hi - lo) / 4); lo = Math.floor(lo / step) * step; hi = Math.ceil(hi / step) * step;
+  const n = series[0].data.length;
+  const x = i => L + (W - L - R) * (n === 1 ? 0.5 : i / (n - 1)), y = v => T + (H - T - B) * (1 - (v - lo) / (hi - lo));
+  const ticks = []; for (let v = lo; v <= hi + 1e-9; v += step) ticks.push(v);
+  const bw = (W - L - R) / n * 0.6;
+  return `<div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(o.label || 'Chart')}">
+    ${ticks.map(v => `<line class="ax" x1="${L}" x2="${W - R}" y1="${y(v)}" y2="${y(v)}" ${v === 0 ? 'style="stroke:var(--border)"' : ''}/><text x="${L - 6}" y="${y(v) + 4}" text-anchor="end">${o.money ? compactMoney(v) : n0(v)}</text>`).join('')}
+    ${(o.labels || []).map((l, i) => `<text x="${x(i)}" y="${H - 8}" text-anchor="middle">${esc(l)}</text>`).join('')}
+    ${series.map(s => s.bars ? s.data.map((v, i) => `<rect x="${x(i) - bw / 2}" y="${Math.min(y(v), y(0))}" width="${bw}" height="${Math.abs(y(v) - y(0))}" style="fill:${s.color}" rx="2"/>`).join('') : '').join('')}
+    ${(o.hlines || []).map(h => `<line x1="${L}" x2="${W - R}" y1="${y(h.v)}" y2="${y(h.v)}" style="stroke:${h.color};stroke-width:1.5" stroke-dasharray="${h.dash || '5 4'}"/>`).join('')}
+    ${series.filter(s => !s.bars).map(s => `<polyline fill="none" style="stroke:${s.color}" stroke-width="2.2" stroke-linejoin="round" points="${s.data.map((v, i) => `${x(i)},${y(v)}`).join(' ')}"/><circle cx="${x(n - 1)}" cy="${y(s.data[n - 1])}" r="3.5" style="fill:${s.color}"/>`).join('')}
+    ${o.marker != null && o.marker >= 0 ? `<line x1="${x(o.marker)}" x2="${x(o.marker)}" y1="${T}" y2="${H - B}" style="stroke:var(--brass)" stroke-width="1.5"/><text x="${x(o.marker) + 4}" y="${T + 10}" style="fill:var(--brass-ink)">${esc(o.markerLabel || '')}</text>` : ''}
+  </svg></div>`;
+}
+function niceStep(raw) { const e = Math.pow(10, Math.floor(Math.log10(Math.max(raw, 1e-9)))); const f = raw / e; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * e; }
+function compactMoney(v) { const a = Math.abs(v); const s = a >= 1000 ? (a / 1000).toFixed(a >= 10000 ? 0 : 1).replace(/\.0$/, '') + 'k' : String(Math.round(a)); return (v < 0 ? '−$' : '$') + s; }
+const legend = items => `<div class="legend">${items.map(([c, l, dash]) => `<span><i style="background:${c};${dash ? 'height:0;border-top:2px dashed ' + c + ';background:none' : ''}"></i>${esc(l)}</span>`).join('')}</div>`;
+
+/* ---------- screens ---------- */
+function renderContent() {
+  const el = $('#content'); const fn = SCREEN_FN[S.screen] || SCREEN_FN.dashboard;
+  if (!S.loaded) return;
+  Object.keys(LIVE).forEach(k => delete LIVE[k]);
+  el.innerHTML = fn();
+  fillNames();
+}
+async function fillNames() {
+  const els = [...document.querySelectorAll('[data-uid]')]; if (!els.length) return;
+  const ids = [...new Set(els.map(e => e.dataset.uid).filter(Boolean))];
+  let ps = {};
+  if (S.user && ids.length) { try { ps = await S.user.profiles(ids); } catch (e) {} }
+  els.forEach(e => { const id = e.dataset.uid; e.textContent = !id ? 'System' : (ps[id]?.name || (id === S.me ? 'You' : 'Someone')); });
+}
+const who = id => `<span data-uid="${esc(id || '')}">${!id ? 'System' : id === S.me ? 'You' : 'Someone'}</span>`;
+
+const SCREEN_FN = {};
+
+/* Dashboard */
+SCREEN_FN.dashboard = () => {
+  const list = sortedProjects();
+  const q = (S.dashQ || '').toLowerCase();
+  const rows = list.filter(p => !q || [p.name, p.profile.city, p.profile.state, p.profile.industry, p.status].join(' ').toLowerCase().includes(q));
+  const comp = p => completion(p);
+  const recent = list.flatMap(p => (p.audit || []).slice(-6).map(a => Object.assign({ pname: p.name, pid: p.id }, a))).sort((a, b) => b.at.localeCompare(a.at)).slice(0, 8);
+  const last = list[0];
+  return `${headHTML('Mete Business Blueprint', 'Plan how a business is structured, marketed, staffed, equipped, operated and financed.', `<button class="btn primary" data-act="go" data-v="new">New Blueprint</button>`, 1)}
+  ${list.length ? `
+  <div class="kpis">
+    <div class="kpi"><span class="label">Active blueprints</span><span class="v">${list.length}</span></div>
+    <div class="kpi"><span class="label">Awaiting review</span><span class="v">${list.filter(p => p.status === 'Needs Review').length}</span></div>
+    <div class="kpi"><span class="label">Ready to export</span><span class="v">${list.filter(p => p.status === 'Ready').length}</span></div>
+    <div class="kpi"><span class="label">Last updated</span><span class="v" style="font-size:16px;line-height:30px">${last ? when(last.updatedAt) : '—'}</span></div>
+  </div>
+  <div class="card"><div class="between"><h2>Projects</h2><input type="search" id="dash-q" data-act-input="dashq" placeholder="Search business, city, industry, status" value="${esc(S.dashQ || '')}" style="max-width:320px"></div>
+  <div class="tw"><table><thead><tr><th>Business</th><th>Location</th><th>Industry</th><th>Stage</th><th>Owner</th><th>Completion</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+  ${rows.map(p => `<tr class="${p.id === S.cur ? 'sel' : ''}"><td><b>${esc(p.name)}</b>${p.illustrative ? ' <span class="illus">Illustrative</span>' : ''}</td><td>${esc([p.profile.city, p.profile.state].filter(Boolean).join(', ') || '—')}</td><td>${esc(p.profile.industry || '—')}</td><td>${p.profile.stage === 'existing' ? 'Existing' : 'Startup'}</td><td>${p.owner ? who(p.owner) : '—'}</td>
+    <td style="min-width:120px"><div class="bar-meter" aria-label="${comp(p)}% complete"><i style="width:${comp(p)}%"></i></div><span class="small muted">${comp(p)}%</span></td>
+    <td><span class="chip ${statusClass(p.status)}">${esc(p.status)}</span></td>
+    <td style="white-space:nowrap"><button class="btn sm" data-act="open" data-v="${esc(p.id)}">Open</button> <button class="btn sm ghost" data-act="dup" data-v="${esc(p.id)}">Duplicate</button> <button class="btn sm ghost" data-act="archive" data-v="${esc(p.id)}">Archive</button></td></tr>`).join('')}
+  ${rows.length ? '' : '<tr><td colspan="8" class="muted">No projects match that search.</td></tr>'}
+  </tbody></table></div></div>
+  <div class="card"><h2>Recent activity</h2>${recent.length ? `<div class="stack-sm">${recent.map(a => `<div class="between small"><span><b>${esc(a.pname)}</b> · ${esc(a.action)}${a.path ? ` <span class="muted">(${esc(a.path)})</span>` : ''}</span><span class="muted">${who(a.actor)} · ${when(a.at)}</span></div>`).join('')}</div>` : '<p class="muted">No activity yet.</p>'}</div>
+  ${archivedList()}` : `
+  <div class="empty"><div class="eyebrow">Start here</div><h2>No blueprints yet</h2><p class="muted" style="max-width:52ch">A blueprint starts with four things: your industry, what you sell, where, and whether the business is new or already running. Everything else can be filled in as you go.</p>
+  <div class="flex" style="justify-content:center"><button class="btn primary" data-act="go" data-v="new">Create First Blueprint</button><button class="btn" data-act="load-example">Load illustrative example</button></div>
+  <p class="small muted">The example is a specialty brownie business in Tucker, Georgia, clearly marked as sample data.</p></div>`}`;
+};
+function archivedList() {
+  const arch = Object.values(S.projects).filter(p => p.archived);
+  if (!arch.length) return '';
+  return `<details class="panel"><summary><span class="chev">${ICON.chev}</span><h3>Archived (${arch.length})</h3></summary><div class="body">${arch.map(p => `<div class="between"><span>${esc(p.name)}</span><button class="btn sm" data-act="unarchive" data-v="${esc(p.id)}">Restore</button></div>`).join('')}</div></details>`;
+}
+function completion(p) {
+  const checks = [has(p.profile.industry), has(p.profile.product), has(p.profile.city) || has(p.profile.state), p.products.some(x => num(x.price) > 0), p.channels.length > 0,
+    p.sources.length > 0, has(p.capPlan.positioning), p.ops.sops.filter(s => has(s.steps)).length >= 3, p.fin.fixed.some(f => num(f.amount) > 0), p.fin.funding.some(f => num(f.amount) > 0),
+    p.risks.some(r => r.status !== 'Unverified'), p.tasks.length > 0, ['Needs Review', 'Ready', 'Published'].includes(p.status), !!p.signedOff];
+  return Math.round(checks.filter(Boolean).length / checks.length * 100);
+}
+
+/* New Blueprint wizard */
+const WIZ = [
+  ['Business identity', [['name', 'Business name (optional)'], ['stage', 'Startup or existing', 'select', [['startup', 'Startup (not open yet)'], ['existing', 'Existing business']], 1], ['industry', 'Industry', 'text', null, 1, 'e.g. Food & Beverage'], ['subindustry', 'Subindustry', 'text', null, 0, 'e.g. Specialty baked goods'], ['product', 'Product or service', 'text', null, 1, 'What do you sell?'], ['model', 'Business model', 'select', ['Retail', 'Online', 'Home-based', 'Mobile', 'B2B', 'Service', 'Wholesale', 'Hybrid']]]],
+  ['Geography', [['country', 'Country'], ['state', 'State', 'text', null, 1], ['city', 'City', 'text', null, 1], ['zip', 'ZIP code'], ['radius', 'Service radius (miles)', 'num'], ['presence', 'Presence', 'select', ['Physical', 'Online', 'Hybrid']]], 'No street address is needed. City, state and ZIP are enough for research.'],
+  ['Economics', [['capital', 'Available capital ($)', 'num'], ['targetRevenue', 'Target annual revenue ($)', 'num'], ['targetOwnerIncome', 'Target owner income ($/yr)', 'num'], ['fundingPref', 'Funding preference', 'text', null, 0, 'e.g. savings, microloan, SBA'], ['launchDate', 'Launch date', 'date'], ['currentPrices', 'Current prices and costs (optional)', 'textarea']]],
+  ['Constraints', [['experience', 'Experience', 'textarea'], ['labor', 'Labor available', 'text'], ['facilities', 'Facilities', 'text'], ['equipment', 'Equipment on hand', 'text'], ['riskTolerance', 'Risk tolerance', 'select', ['Low', 'Medium', 'High']], ['channels', 'Sales channels you want to use', 'text'], ['compliance', 'Compliance concerns', 'textarea']]],
+  ['Review', []]];
+SCREEN_FN.new = () => {
+  const w = S.wiz; const d = w.data; const step = w.step;
+  const req = ['industry', 'product', 'state', 'city', 'stage'];
+  if (!d.stage) d.stage = 'startup'; if (!d.country) d.country = 'United States'; if (!d.model) d.model = 'Home-based'; if (!d.presence) d.presence = 'Hybrid'; if (!d.riskTolerance) d.riskTolerance = 'Medium';
+  const missing = req.filter(k => !has(d[k]) && !(k === 'stage' && d.stage));
+  const inp = ([k, l, t, opts, r, ph]) => {
+    const id = 'w-' + k; const v = d[k] ?? '';
+    let el;
+    if (t === 'select') el = `<select id="${id}" data-wiz="${k}">${opts.map(x => { const [a, b] = Array.isArray(x) ? x : [x, x]; return `<option value="${esc(a)}" ${String(v) === a ? 'selected' : ''}>${esc(b)}</option>`; }).join('')}</select>`;
+    else if (t === 'textarea') el = `<textarea id="${id}" data-wiz="${k}" rows="3" placeholder="Not provided">${esc(v)}</textarea>`;
+    else el = `<input id="${id}" data-wiz="${k}" type="${t === 'num' ? 'number' : t || 'text'}" value="${esc(v)}" placeholder="${esc(ph || 'Not provided')}">`;
+    return `<div class="f"><label class="label" for="${id}">${esc(l)}${r ? ' <span class="req">*</span>' : ''}</label>${el}</div>`;
+  };
+  const [title, fields, note] = WIZ[step - 1];
+  return `${headHTML('New Blueprint', 'Five short steps. Only industry, product, city/state and stage are required; anything you skip is marked as a placeholder.', '', 1)}
+  <div class="steps" role="list">${WIZ.map(([t], i) => `<button role="listitem" data-act="wiz-step" data-v="${i + 1}" ${step === i + 1 ? 'aria-current="step"' : ''} class="${i + 1 < step ? 'done' : ''}"><b>${i + 1}</b>${esc(t)}</button>`).join('')}</div>
+  <div class="card pad-lg"><h2>${step}. ${esc(title)}</h2>${note ? `<p class="small muted">${esc(note)}</p>` : ''}
+  ${step < 5 ? `<div class="grid2">${fields.map(inp).join('')}</div>` : `
+    <div class="stack">${WIZ.slice(0, 4).map(([t, fs], i) => `<div class="well"><div class="between"><h3>${esc(t)}</h3><button class="btn sm ghost" data-act="wiz-step" data-v="${i + 1}">Edit</button></div>
+      <div class="grid2 small" style="margin-top:8px">${fs.map(([k, l, tp, opts, r]) => `<div><span class="label">${esc(l)}</span><div>${has(d[k]) || (num(d[k]) > 0) ? esc(tp === 'select' && Array.isArray(opts?.[0]) ? (opts.find(o => o[0] === d[k]) || [, d[k]])[1] : d[k]) : `<span class="${r ? 'req' : 'muted'}">${r ? 'Missing (required)' : 'Not provided: placeholder'}</span>`}</div></div>`).join('')}</div></div>`).join('')}
+    ${missing.length ? `<div class="note danger">Fill in the required fields before starting: ${missing.join(', ')}.</div>` : `<div class="note">Live web research is not connected in this version. Starting creates the blueprint and opens Research & Sources so you can enter evidence by hand.</div>`}</div>`}
+  <div class="between"><button class="btn" data-act="wiz-step" data-v="${Math.max(1, step - 1)}" ${step === 1 ? 'disabled' : ''}>Back</button>
+  ${step < 5 ? `<button class="btn primary" data-act="wiz-step" data-v="${step + 1}">Next</button>` : `<button class="btn brass" data-act="wiz-start" ${missing.length ? 'disabled' : ''}>Start Research</button>`}</div></div>`;
+};
+
+/* Business Profile */
+SCREEN_FN.profile = () => {
+  const p = P(); if (!p) return needProject();
+  const F = (k, l, o) => fld(l, 'profile.' + k, o);
+  return `${headHTML('Business Profile', 'The single source every engine reads from. Edits here flow into research, CAP, OPS and the financial model.')}
+  <div class="card"><h2>Identity</h2><div class="grid3">${fld('Blueprint name', 'name')}${F('stage', 'Stage', { type: 'select', options: [['startup', 'Startup'], ['existing', 'Existing business']] })}${F('model', 'Business model', { type: 'select', options: ['Retail', 'Online', 'Home-based', 'Mobile', 'B2B', 'Service', 'Wholesale', 'Hybrid'] })}
+    ${F('industry', 'Industry', { req: 1 })}${F('subindustry', 'Subindustry')}${F('product', 'Product or service', { req: 1 })}</div></div>
+  <div class="card"><h2>Geography</h2><div class="grid3">${F('country', 'Country')}${F('state', 'State', { req: 1 })}${F('city', 'City', { req: 1 })}${F('zip', 'ZIP')}${F('radius', 'Service radius', { type: 'num', suffix: 'mi' })}${F('presence', 'Presence', { type: 'select', options: ['Physical', 'Online', 'Hybrid'] })}</div></div>
+  <div class="card"><h2>Economics</h2><div class="grid3">${F('capital', 'Available capital', { type: 'num', prefix: '$' })}${F('targetRevenue', 'Target annual revenue', { type: 'num', prefix: '$', help: 'Used by CAP rule rev3 and the review queue.' })}${F('targetOwnerIncome', 'Target owner income / yr', { type: 'num', prefix: '$', help: 'Owner pay is not an expense in this model; compare it to operating result.' })}
+    ${F('fundingPref', 'Funding preference')}${F('launchDate', 'Launch date', { type: 'date', help: 'Sets the first month of the forecast and seasonality.' })}${F('currentPrices', 'Current prices & costs', { type: 'textarea' })}</div></div>
+  <div class="card"><h2>Constraints</h2><div class="grid2">${F('experience', 'Experience', { type: 'textarea' })}${F('labor', 'Labor available', { type: 'textarea' })}${F('facilities', 'Facilities')}${F('equipment', 'Equipment on hand')}${F('riskTolerance', 'Risk tolerance', { type: 'select', options: ['Low', 'Medium', 'High'] })}${F('channels', 'Preferred sales channels')}${F('compliance', 'Compliance concerns', { type: 'textarea' })}</div></div>`;
+};
+
+/* Research & Sources */
+SCREEN_FN.research = () => {
+  const p = P(); if (!p) return needProject();
+  const tab = S.tab.research;
+  const tabs = [...RCATS, 'Sources'];
+  const cats = RCATS.map(c => [c, p.sources.filter(s => s.category === c).length]);
+  const list = tab === 'Sources' ? p.sources : p.sources.filter(s => s.category === tab);
+  return `${headHTML('Research & Sources', 'Every finding shows its value, source, date, location relevance, confidence and whether it is verified, estimated or assumed.')}
+  <div class="note warn"><b>Research unavailable.</b> Live web research is not connected in this version, so nothing here was looked up automatically and no citations are generated. Add evidence by hand below; each entry keeps its source and date.</div>
+  <div class="res-grid">
+    <div class="card" style="align-self:start"><h3>Research tasks</h3>${cats.map(([c, n]) => `<div class="between small"><span>${esc(c)}</span><span class="chip ${n ? 'c-ok' : 'c-warn'}">${n ? n + ' found' : 'Open'}</span></div>`).join('')}
+      <div class="bar-meter"><i style="width:${Math.round(cats.filter(c => c[1]).length / cats.length * 100)}%"></i></div><span class="small muted">${cats.filter(c => c[1]).length} of ${cats.length} areas have evidence</span></div>
+    <div class="stack" style="min-width:0">
+      <div class="tabs" role="tablist">${tabs.map(t => `<button role="tab" aria-selected="${t === tab}" data-act="tab" data-k="research" data-v="${t}">${esc(t)}</button>`).join('')}</div>
+      ${tab === 'Competitors' ? competitorsTable() : ''}
+      ${list.length ? list.map(s => findingCard(s)).join('') : `<div class="empty"><p class="muted">No ${tab === 'Sources' ? '' : esc(tab.toLowerCase()) + ' '}evidence yet.</p></div>`}
+    </div>
+    <div class="card" style="align-self:start"><h3>Add evidence</h3><p class="small muted">Research assistant is offline. Enter what you found; leave URL empty if the source is a conversation or document.</p>
+      <form class="stack-sm" data-form="add-source">
+        <div class="f"><label class="label" for="ns-cat">Category</label><select id="ns-cat" name="category">${RCATS.map(c => `<option ${c === tab ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
+        <div class="f"><label class="label" for="ns-claim">Finding <span class="req">*</span></label><input id="ns-claim" name="claim" required placeholder="What does the evidence say?"></div>
+        <div class="f"><label class="label" for="ns-val">Value</label><input id="ns-val" name="value" placeholder="e.g. $160 / month"></div>
+        <div class="f"><label class="label" for="ns-title">Source title</label><input id="ns-title" name="title"></div>
+        <div class="f"><label class="label" for="ns-url">Source URL</label><input id="ns-url" name="url" type="url" placeholder="https://"></div>
+        <div class="grid2"><div class="f"><label class="label" for="ns-date">Published</label><input id="ns-date" name="date" type="date"></div><div class="f"><label class="label" for="ns-acc">Accessed</label><input id="ns-acc" name="accessed" type="date"></div></div>
+        <div class="f"><label class="label" for="ns-loc">Location relevance</label><input id="ns-loc" name="location" value="${esc([p.profile.city, p.profile.state].filter(Boolean).join(', '))}"></div>
+        <div class="grid2"><div class="f"><label class="label" for="ns-kind">Type</label><select id="ns-kind" name="kind">${TAGS.map(t => `<option>${t}</option>`).join('')}</select></div><div class="f"><label class="label" for="ns-conf">Confidence</label><select id="ns-conf" name="confidence"><option>High</option><option selected>Medium</option><option>Low</option></select></div></div>
+        <button class="btn primary" type="submit">Add evidence</button></form></div>
+  </div>`;
+};
+function findingCard(s) {
+  const p = P(); const i = p.sources.indexOf(s);
+  return `<div class="card" style="${s.flagged ? 'border-color:var(--danger)' : ''}"><div class="between"><span class="label">${esc(s.category)}</span><div class="flex"><span class="chip ${tagClass(s.kind)}">${esc(s.kind)}</span><span class="chip ${s.confidence === 'High' ? 'c-ok' : s.confidence === 'Low' ? 'c-bad' : 'c-warn'}">${esc(s.confidence)} confidence</span>${s.flagged ? '<span class="chip c-bad">Marked incorrect</span>' : ''}</div></div>
+    <div class="grid2"><div class="f"><label class="label">Finding</label><input data-path="sources.${i}.claim" value="${esc(s.claim)}"></div><div class="f"><label class="label">Value</label><input data-path="sources.${i}.value" value="${esc(s.value)}"></div></div>
+    <div class="small muted">${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title || s.url)}</a>` : esc(s.title || 'No source title')} · Published ${esc(s.date || 'unknown')} · Accessed ${esc(s.accessed || 'unknown')} · ${esc(s.location || 'location not stated')}</div>
+    <div class="flex"><select class="tagsel" data-path="sources.${i}.kind" aria-label="Evidence type">${TAGS.map(t => `<option ${t === s.kind ? 'selected' : ''}>${t}</option>`).join('')}</select><select class="tagsel" data-path="sources.${i}.confidence" aria-label="Confidence">${['High', 'Medium', 'Low'].map(t => `<option ${t === s.confidence ? 'selected' : ''}>${t}</option>`).join('')}</select>
+    <button class="btn sm" data-act="src-refresh" data-v="${esc(s.id)}">Refresh</button><button class="btn sm ${s.flagged ? '' : 'danger'}" data-act="src-flag" data-v="${esc(s.id)}">${s.flagged ? 'Clear incorrect mark' : 'Mark incorrect'}</button><button class="btn sm ghost" data-act="row-del" data-path="sources" data-i="${i}">Remove</button></div></div>`;
+}
+function competitorsTable() {
+  return `<div class="card"><h3>Competitors</h3>${tableEditor('competitors', [{ key: 'name', label: 'Name', w: 180 }, { key: 'location', label: 'Location' }, { key: 'price', label: 'Comparable price ($)', type: 'num' }, { key: 'note', label: 'Notes', w: 220 }], { tpl: { name: '', location: '', price: 0, note: '', src: '' }, addLabel: 'Add competitor' })}</div>`;
+}
+
+/* CAP Strategy */
+SCREEN_FN.cap = () => {
+  const p = P(); if (!p) return needProject();
+  LIVE.funnel = () => funnelHTML();
+  LIVE.cappanels = () => capPanelsHTML();
+  return `${headHTML('CAP Strategy', 'Customer Acquisition Program: how customers find you, buy, and come back, scored against Mete’s internal rules.')}
+  <div class="note">Scores use Mete’s internal rules shown in each panel. They are not an external rating or validation.${p.settings.consultant ? ' Consultant mode: rule points are editable.' : ''}</div>
+  <div class="card"><div class="between"><h2>Acquisition funnel</h2><span class="small muted">Monthly averages over the first 12 months</span></div>
+    <div data-live="funnel">${funnelHTML()}</div>
+    <div class="grid4">${assume('contacts', 'Contacts / month', { help: 'People who see or hear the offer' })}${assume('leadRate', 'Lead rate', { suffix: '%' })}${assume('qualRate', 'Qualified rate', { suffix: '%' })}${assume('closeRate', 'Close rate', { suffix: '%' })}${assume('repeatRate', 'Monthly repeat rate', { suffix: '%', help: 'Share of past customers who order again each month' })}${assume('unitsPerOrder', 'Units per order')}${assume('growth', 'Contact growth / month', { suffix: '%' })}</div></div>
+  <div class="card"><h2>Channel mix</h2><p class="small muted">Share of units sold through each channel. Realization is the % of list price received; collection days delay cash.</p>
+    ${tableEditor('channels', [{ key: 'name', label: 'Channel', w: 180 }, { key: 'share', label: 'Share %', type: 'num' }, { key: 'realization', label: 'Realized %', type: 'num' }, { key: 'collectDays', label: 'Collect (days)', type: 'num' }, { key: 'spend', label: 'Spend $/mo', type: 'num' }, { key: 'tag', label: 'Evidence', type: 'tag' }], { tpl: { name: '', share: 0, realization: 100, collectDays: 0, spend: 0, tag: 'Assumption' }, addLabel: 'Add channel' })}
+    <div data-live="chcheck">${chCheck()}</div></div>
+  <div data-live="cappanels" class="stack">${capPanelsHTML()}</div>
+  <div class="card"><h2>Marketing plan</h2><div class="grid2">
+    ${fld('Target customer', 'capPlan.customer', { type: 'textarea' })}${fld('Positioning', 'capPlan.positioning', { type: 'textarea' })}${fld('Messaging', 'capPlan.messaging', { type: 'textarea' })}${fld('Sales scripts', 'capPlan.scripts', { type: 'textarea' })}${fld('Lead handling', 'capPlan.leadHandling', { type: 'textarea' })}${fld('Retention', 'capPlan.retention', { type: 'textarea' })}${fld('KPI targets', 'capPlan.kpis', { type: 'textarea' })}</div></div>`;
+};
+LIVE.chcheck = () => chCheck();
+function chCheck() { const p = P(); const t = p.channels.reduce((s, c) => s + num(c.share), 0); return Math.round(t) === 100 ? '' : `<div class="note warn">Channel shares add up to ${n1(t)}%. The model scales them to 100%.</div>`; }
+function funnelHTML() {
+  const p = P(); const r = Engine.run(p); const m = r.months; const avg = k => m.reduce((s, x) => s + x[k], 0) / 12;
+  const steps = [['Contacts', avg('contacts')], ['Leads', avg('leads')], ['Qualified', avg('qualified')], ['New customers', avg('newCust')], ['Repeat orders', avg('repeatOrders')]];
+  const max = Math.max(...steps.map(s => s[1]), 1);
+  return `<div class="funnel">${steps.map(([l, v]) => `<div class="fstep"><span class="label">${l}</span><span class="v">${n1(v)}</span><span class="fill" style="width:${Math.max(4, v / max * 100)}%"></span></div>`).join('')}</div>
+  <div class="kpis" style="margin-top:12px">
+    <div class="kpi"><span class="label">Cost per acquisition</span><span class="v">${Number.isFinite(r.cac) ? money(r.cac, 2) : 'No customers'}</span><span class="small muted">${money(r.marketing)} spend ÷ ${n1(r.totals.newCust / 12)} new / mo</span></div>
+    <div class="kpi"><span class="label">Contribution per order</span><span class="v ${r.custContribution <= 0 ? 'bad' : ''}">${money(r.custContribution, 2)}</span><span class="small muted">${money(r.ue.unitContribution, 2)} × ${n1(av(p.fin.a.unitsPerOrder))} units</span></div>
+    <div class="kpi"><span class="label">CAC payback</span><span class="v">${r.paybackOrders === null ? 'Never' : n1(r.paybackOrders) + ' orders'}</span><span class="small muted">Orders needed to recover acquisition cost</span></div>
+  </div>`;
+}
+function capPanelsHTML() {
+  const p = P(); const r = Engine.run(p); const sc = capScores(p, r);
+  return CAP_PANELS.map(([k, title, cats]) => {
+    const o = sc[k]; const c = p.cap[k] || {}; const failed = o.rules.filter(x => !x.pass);
+    const ev = p.sources.filter(s => cats.includes(s.category));
+    const cls = o.score >= 75 ? 'c-ok' : o.score >= 50 ? 'c-warn' : 'c-bad';
+    return `<details class="panel" data-k="${k}" ${S.expanded['cap-' + k] ? 'open' : ''}><summary data-act="toggle-panel" data-v="cap-${k}"><span class="chev">${ICON.chev}</span><h2 style="flex:1;min-width:180px">${esc(title)}</h2><span class="score ${cls}">${o.score}/100</span><span class="small muted">${failed.length ? failed.length + ' gap' + (failed.length > 1 ? 's' : '') : 'No gaps'}</span></summary>
+    <div class="body">
+      <div class="grid2">
+        <div class="stack-sm"><span class="label">Assessment rules (${o.pts} of ${o.max} points)</span>${o.rules.map(x => `<div class="rule"><span class="mk ${x.pass ? 'y' : 'n'}" aria-label="${x.pass ? 'Pass' : 'Fail'}">${x.pass ? '✓' : '✕'}</span><span>${esc(x.rule.text)}</span>${p.settings.consultant ? `<input type="number" min="0" step="1" style="width:56px" data-weight="${x.rule.id}" value="${x.w}" aria-label="Points for ${esc(x.rule.text)}">` : `<span class="small muted">${x.w} pt</span>`}</div>`).join('')}</div>
+        <div class="stack-sm"><span class="label">Evidence</span>${ev.length ? ev.map(s => `<div class="small"><span class="chip ${tagClass(s.kind)}">${esc(s.kind)}</span> ${esc(s.claim)}${s.value ? ': <b>' + esc(s.value) + '</b>' : ''}</div>`).join('') : '<p class="small muted">No evidence attached for this area yet.</p>'}</div>
+      </div>
+      <div class="stack-sm"><span class="label">Problems and recommended actions</span>${failed.length ? failed.map(x => { const imp = whatIfImpact(p, r, x.rule); const d = p.recDecisions[x.rule.id]; return `<div class="well stack-sm"><div><b>${esc(x.rule.text)}</b> is not met.</div><div>${esc(x.rule.action)}</div>
+        <div class="small muted">Expected financial impact: ${imp === null ? 'not modeled for this action' : `${imp >= 0 ? '+' : ''}${money(imp)} 12-month operating result if ${x.rule.whatIfLabel || 'the rule threshold is met'} (model estimate)`}</div>
+        <div class="flex small">${d ? `<span class="chip ${d.status === 'Accepted' ? 'c-ok' : 'c-warn'}">${esc(d.status)}</span><span class="muted">${who(d.actor)} · ${when(d.at)}${d.reason ? ' · ' + esc(d.reason) : ''}</span>` : ''}<button class="btn sm" data-act="rec" data-v="${x.rule.id}" data-s="Accepted">Accept</button><button class="btn sm ghost" data-act="rec" data-v="${x.rule.id}" data-s="Dismissed">Dismiss…</button></div></div>`; }).join('') : '<p class="small muted">All rules met.</p>'}</div>
+      <div class="grid2">${fld('Assumptions & notes', 'cap.' + k + '.notes', { type: 'textarea' })}<div class="stack-sm">${fld('Confidence', 'cap.' + k + '.confidence', { type: 'select', options: ['High', 'Medium', 'Low'] })}</div></div>
+    </div></details>`;
+  }).join('');
+}
+
+/* OPS Design */
+SCREEN_FN.ops = () => {
+  const p = P(); if (!p) return needProject();
+  const tab = S.tab.ops; const sel = p.ops.selected; const mp = 'ops.models.' + sel;
+  LIVE.models = () => modelsHTML();
+  LIVE.capacity = () => capacityHTML();
+  let body = '';
+  if (tab === 'Legal & Setup') body = `<div class="note warn">Permits and licenses listed here must be confirmed with the issuing authority. Nothing in this blueprint is an approval.</div>
+    <div class="tw"><table><thead><tr><th>Requirement</th><th>Geography</th><th>Status</th><th>Due</th><th>Next step</th></tr></thead><tbody>${p.risks.filter(x => x.type === 'Legal requirement').map(x => `<tr><td>${esc(x.issue)}</td><td>${esc(x.geography)}</td><td><span class="chip ${x.status === 'Verified' ? 'c-ok' : x.status === 'Not Applicable' ? 'c-info' : 'c-warn'}">${esc(x.status === 'Unverified' ? 'Verify with authority' : x.status)}</span></td><td>${esc(x.due || '—')}</td><td class="small">${esc(x.mitigation)}</td></tr>`).join('')}</tbody></table></div>
+    <p class="small muted">Edit these items on the Risks & Compliance screen; both screens read the same register.</p>`;
+  if (tab === 'Location & Facilities') body = `<div class="grid2">${fld('Facility type', 'ops.facility', { type: 'textarea' })}${fld('Location notes', 'ops.location', { type: 'textarea', help: 'Avoid storing a street address unless it is needed.' })}</div>`;
+  if (tab === 'Equipment') body = `<p class="small muted">Equipment for the <b>${esc(p.ops.models[sel].name)}</b> model. Totals feed startup uses and cash on day one.</p>${tableEditor(mp + '.equipment', [{ key: 'item', label: 'Item', w: 240 }, { key: 'cost', label: 'Cost ($)', type: 'num' }], { tpl: { item: '', cost: 0 }, addLabel: 'Add equipment' })}`;
+  if (tab === 'Suppliers & Inventory') body = tableEditor('ops.suppliers', [{ key: 'name', label: 'Supplier', w: 180 }, { key: 'item', label: 'Items', w: 180 }, { key: 'cost', label: 'Cost' }, { key: 'lead', label: 'Lead days', type: 'num' }, { key: 'note', label: 'Notes', w: 200 }], { tpl: { name: '', item: '', cost: '', lead: 0, note: '' }, addLabel: 'Add supplier' });
+  if (tab === 'Staffing') body = `<p class="small muted">Paid staff for the <b>${esc(p.ops.models[sel].name)}</b> model. Hours raise capacity; pay and payroll taxes raise fixed cost.</p>${tableEditor(mp + '.staff', [{ key: 'role', label: 'Role', w: 220 }, { key: 'hours', label: 'Hours / week', type: 'num' }, { key: 'rate', label: 'Rate $/hr', type: 'num' }], { tpl: { role: '', hours: 0, rate: 15 }, addLabel: 'Add hire' })}
+    <div class="grid3">${assume('ownerHours', 'Owner hours / week')}${assume('payrollTax', 'Payroll taxes', { suffix: '%' })}${assume('hoursPerUnit', 'Labor hours per unit')}</div>`;
+  if (tab === 'Workflow & SOPs') body = `<div class="flex small muted">${p.ops.sops.map((s, i) => `<span class="chip c-info">${i + 1}. ${esc(s.step)}</span>${i < p.ops.sops.length - 1 ? '→' : ''}`).join(' ')}</div>
+    ${p.ops.sops.map((s, i) => `<details class="panel" ${S.expanded['sop-' + i] ? 'open' : ''}><summary data-act="toggle-panel" data-v="sop-${i}"><span class="chev">${ICON.chev}</span><h3 style="flex:1">${i + 1}. ${esc(s.step)}</h3><span class="chip ${has(s.steps) ? 'c-ok' : 'c-warn'}">${has(s.steps) ? 'Written' : 'Needs steps'}</span></summary><div class="body"><div class="grid3">
+      ${['trigger', 'owner', 'inputs', 'duration', 'records'].map(k => fld(k[0].toUpperCase() + k.slice(1), `ops.sops.${i}.${k}`)).join('')}</div><div class="grid3">${fld('Steps', `ops.sops.${i}.steps`, { type: 'textarea' })}${fld('Checks', `ops.sops.${i}.checks`, { type: 'textarea' })}${fld('Escalation', `ops.sops.${i}.escalation`, { type: 'textarea' })}</div></div></details>`).join('')}`;
+  if (tab === 'Capacity') body = `<div data-live="capacity">${capacityHTML()}</div>`;
+  if (tab === 'Quality & Risk') body = `${tableEditor('ops.quality', [{ key: 'done', label: 'In place', type: 'check' }, { key: 'item', label: 'Quality control', w: 360 }], { tpl: { item: '', done: false }, addLabel: 'Add check' })}${fld('Quality plan', 'ops.qualityPlan', { type: 'textarea' })}`;
+  return `${headHTML('OPS Design', 'Operations Performance System: how the work gets done, by whom, with what, and how much the business can produce.')}
+  <div class="card"><div class="between"><h2>Operating models</h2><span class="small muted">Selected model drives capacity, staffing, equipment and the financial model</span></div><div data-live="models">${modelsHTML()}</div></div>
+  <div class="card"><div class="tabs" role="tablist">${OPS_TABS.map(t => `<button role="tab" aria-selected="${t === tab}" data-act="tab" data-k="ops" data-v="${t}">${esc(t)}</button>`).join('')}</div>${body}</div>`;
+};
+function modelsHTML() {
+  const p = P();
+  const rows = MODEL_KEYS.map(k => { const r = Engine.run(p, { model: k }); return { k, m: p.ops.models[k], r }; });
+  const cell = f => rows.map(x => `<td class="n">${f(x)}</td>`).join('');
+  return `<div class="tw"><table><thead><tr><th></th>${rows.map(x => `<th class="n">${esc(x.m.name)}${x.k === p.ops.selected ? ' · selected' : ''}</th>`).join('')}</tr></thead><tbody>
+    <tr><td>Startup cost (equipment + other uses)</td>${cell(x => money(x.r.uses))}</tr>
+    <tr><td>Monthly fixed cost (incl. payroll, marketing)</td>${cell(x => money(x.r.fixedTotal))}</tr>
+    <tr><td>Max capacity (units / month)</td>${cell(x => `${n0(x.r.capacity)}<div class="small muted">${x.r.laborCap < x.r.equipCap ? 'labor-limited' : 'equipment-limited'}</div>`)}</tr>
+    <tr><td>Labor hours / month (owner + staff)</td>${cell(x => n0(x.r.ownerHours + x.r.staffHours))}</tr>
+    <tr><td>Units unserved (12 mo)</td>${cell(x => x.r.totals.overflow > 0.5 ? `<span style="color:var(--danger)">${n0(x.r.totals.overflow)}</span>` : '0')}</tr>
+    <tr><td>12-month operating result</td>${cell(x => `<span style="color:${x.r.totals.opResult < 0 ? 'var(--danger)' : 'var(--ok)'}">${money(x.r.totals.opResult)}</span>`)}</tr>
+    <tr><td>Lowest cash balance</td>${cell(x => `<span style="color:${x.r.minCash < 0 ? 'var(--danger)' : 'inherit'}">${money(x.r.minCash)}</span>`)}</tr>
+    <tr><td>Equipment capacity setting</td>${rows.map(x => `<td class="n"><input class="w-num" type="number" data-num="1" data-path="ops.models.${x.k}.capacity" value="${esc(x.m.capacity)}" aria-label="${esc(x.m.name)} capacity"></td>`).join('')}</tr>
+    <tr><td>Extra fixed cost $/mo (rent, kitchen)</td>${rows.map(x => `<td class="n"><input class="w-num" type="number" data-num="1" data-path="ops.models.${x.k}.fixed" value="${esc(x.m.fixed)}" aria-label="${esc(x.m.name)} extra fixed cost"></td>`).join('')}</tr>
+    <tr><td>Tradeoffs</td>${rows.map(x => `<td class="small" style="min-width:180px;white-space:normal">${esc(x.m.tradeoffs)}</td>`).join('')}</tr>
+    <tr><td></td>${rows.map(x => `<td class="n">${x.k === p.ops.selected ? '<span class="chip c-ok">In use</span>' : `<button class="btn sm" data-act="model" data-v="${x.k}">Use ${esc(x.m.name)}</button>`}</td>`).join('')}</tr>
+  </tbody></table></div>`;
+}
+function capacityHTML() {
+  const p = P(); const r = Engine.run(p);
+  return `<div class="kpis"><div class="kpi"><span class="label">Equipment capacity</span><span class="v">${Number.isFinite(r.equipCap) ? n0(r.equipCap) : 'No limit set'}</span><span class="small muted">units / month</span></div>
+    <div class="kpi"><span class="label">Labor capacity</span><span class="v">${Number.isFinite(r.laborCap) ? n0(r.laborCap) : '—'}</span><span class="small muted">${n0(r.ownerHours + r.staffHours)} hrs ÷ ${av(p.fin.a.hoursPerUnit).toLocaleString('en-US', { maximumFractionDigits: 2 })} hrs/unit</span></div>
+    <div class="kpi"><span class="label">Break-even volume</span><span class="v">${r.beUnits === null ? 'None' : n0(r.beUnits)}</span><span class="small muted">units / month</span></div>
+    <div class="kpi"><span class="label">Peak utilization</span><span class="v ${r.capacityShort ? 'bad' : ''}">${pct(Math.max(...r.months.map(x => x.utilization)))}</span></div></div>
+    ${r.capacityShort ? `<div class="note danger"><b>Capacity alert.</b> Demand is higher than ${n0(r.capacity)} units in ${r.months.filter(x => x.overflow > 0.5).length} month(s). The model caps sales at capacity. Options: pre-order cutoffs, raise prices, add staff hours, or switch operating model.</div>` : ''}
+    ${lineChart([{ data: r.months.map(x => x.units), color: 'var(--navy)', bars: true }, { data: r.months.map(x => x.unitsDemand), color: 'var(--brass)' }], { labels: r.months.map(x => monthLabel(r, x.i)), hlines: [Number.isFinite(r.capacity) ? { v: r.capacity, color: 'var(--danger)' } : null, r.beUnits !== null ? { v: r.beUnits, color: 'var(--ok)', dash: '2 3' } : null].filter(Boolean), label: 'Units sold vs demand, capacity and break-even' })}
+    ${legend([['var(--navy)', 'Units sold'], ['var(--brass)', 'Demand'], ['var(--danger)', 'Capacity', 1], ['var(--ok)', 'Break-even', 1]])}`;
+}
+
+/* Financial Model */
+SCREEN_FN.fin = () => {
+  const p = P(); if (!p) return needProject();
+  LIVE.finres = () => finResults();
+  return `${headHTML('Financial Model', 'Every number is computed in code from the assumptions on the left. Prices exclude sales tax. Income tax is not modeled.')}
+  <div class="fin-grid">
+    <div class="stack">
+      <div class="card"><h2>Products & prices</h2>${tableEditor('products', [{ key: 'name', label: 'SKU / service', w: 150 }, { key: 'price', label: 'Price', type: 'num' }, { key: 'unitCost', label: 'Unit cost', type: 'num' }, { key: 'mix', label: 'Mix %', type: 'num' }, { key: 'tag', label: 'Evidence', type: 'tag' }], { tpl: { name: '', price: 0, unitCost: 0, mix: 0, tag: 'Assumption' }, addLabel: 'Add product' })}</div>
+      <div class="card"><h2>Volume</h2><div class="grid2">${assume('contacts', 'Contacts / month')}${assume('closeRate', 'Close rate', { suffix: '%' })}${assume('repeatRate', 'Repeat rate', { suffix: '%' })}${assume('unitsPerOrder', 'Units per order')}${assume('growth', 'Growth / month', { suffix: '%' })}${assume('paymentFee', 'Payment fees', { suffix: '%' })}</div><p class="small muted">Lead and qualified rates, and channels, are on CAP Strategy.</p></div>
+      <div class="card"><h2>Seasonality</h2><p class="small muted">100 = a normal month.</p><div class="grid4" style="grid-template-columns:repeat(4,minmax(0,1fr))">${MONTHS.map((m, i) => `<div class="f"><label class="label" for="se-${i}">${m}</label><input id="se-${i}" type="number" data-num="1" data-path="fin.season.${i}" value="${esc(p.fin.season[i])}"></div>`).join('')}</div></div>
+      <div class="card"><h2>Fixed expenses / month</h2>${tableEditor('fin.fixed', [{ key: 'name', label: 'Expense', w: 170 }, { key: 'amount', label: '$ / mo', type: 'num' }], { tpl: { name: '', amount: 0 }, addLabel: 'Add expense' })}<p class="small muted">Payroll comes from Staffing and marketing from channel spend; they are not entered here, so nothing is counted twice.</p></div>
+      <div class="card"><h2>Startup uses</h2>${tableEditor('fin.uses', [{ key: 'name', label: 'Use', w: 170 }, { key: 'amount', label: '$', type: 'num' }], { tpl: { name: '', amount: 0 }, addLabel: 'Add use' })}<p class="small muted">Equipment for the selected operating model is added automatically.</p></div>
+      <div class="card"><h2>Funding sources</h2>${tableEditor('fin.funding', [{ key: 'name', label: 'Source', w: 150 }, { key: 'type', label: 'Type', type: 'select', options: ['Equity', 'Loan', 'Grant'] }, { key: 'amount', label: '$', type: 'num' }, { key: 'rate', label: 'Rate %', type: 'num' }, { key: 'term', label: 'Months', type: 'num' }], { tpl: { name: '', type: 'Loan', amount: 0, rate: 0, term: 12 }, addLabel: 'Add funding' })}</div>
+    </div>
+    <div data-live="finres" class="stack" style="min-width:0">${finResults()}</div>
+  </div>`;
+};
+function finResults() {
+  const p = P(); const r = Engine.run(p); const T = r.totals; const L = r.months.map(x => monthLabel(r, x.i));
+  const sc = Engine.scenarios(p); const sens = Engine.sensitivity(p);
+  const row = (label, k, o = {}) => `<tr class="${o.cls || ''}"><td>${label}</td>${r.months.map(x => `<td class="n" style="${x[k] < -0.5 && o.neg ? 'color:var(--danger)' : ''}">${money(x[k])}</td>`).join('')}<td class="n"><b>${o.noTotal ? '' : money(T[k] ?? 0)}</b></td></tr>`;
+  return `<div class="kpis">
+    <div class="kpi"><span class="label">12-mo revenue</span><span class="v">${money(T.revenue)}</span><span class="small muted">Not profit</span></div>
+    <div class="kpi"><span class="label">Contribution margin</span><span class="v ${r.ue.unitContribution <= 0 ? 'bad' : ''}">${pct(r.ue.contributionMargin)}</span><span class="small muted">${money(r.ue.unitContribution, 2)} per unit</span></div>
+    <div class="kpi"><span class="label">12-mo operating result</span><span class="v ${T.opResult < 0 ? 'bad' : 'good'}">${money(T.opResult)}</span><span class="small muted">Before owner pay & income tax</span></div>
+    <div class="kpi"><span class="label">Break-even</span><span class="v">${r.beUnits === null ? 'None' : n0(r.beUnits)}</span><span class="small muted">${r.beUnits === null ? 'Unit contribution ≤ 0' : `units / mo · ${r.beMonth >= 0 ? 'first reached ' + L[r.beMonth] : 'not reached in 12 mo'}`}</span></div>
+    <div class="kpi"><span class="label">Lowest cash</span><span class="v ${r.minCash < 0 ? 'bad' : ''}">${money(r.minCash)}</span><span class="small muted">${r.firstNegCash >= 0 ? 'Negative in ' + L[r.firstNegCash] : 'Opening ' + money(r.cash0)}</span></div>
+  </div>
+  ${r.capacityShort ? `<div class="note danger"><b>Capacity limits sales.</b> ${n0(T.overflow)} units of demand could not be served by the ${esc(r.model.name)} model. Revenue below reflects capped volume. See OPS Design → Capacity.</div>` : ''}
+  ${r.ue.unitContribution <= 0 ? `<div class="note danger"><b>Each unit loses money after variable costs.</b> Raise prices or lower unit costs; break-even is impossible as entered.</div>` : ''}
+  ${num(p.profile.targetOwnerIncome) > 0 ? `<div class="note ${T.opResult >= num(p.profile.targetOwnerIncome) ? '' : 'warn'}">Target owner income is ${money(num(p.profile.targetOwnerIncome))} / yr. The 12-month operating result after interest is ${money(T.net)}${T.net < num(p.profile.targetOwnerIncome) ? ', short of the target' : ''}.</div>` : ''}
+  <div class="card"><div class="between"><h2>Revenue vs total cost</h2>${legend([['var(--navy)', 'Revenue'], ['var(--danger)', 'Variable + fixed cost']])}</div>
+    ${lineChart([{ data: r.months.map(x => x.revenue), color: 'var(--navy)' }, { data: r.months.map(x => x.varCost + x.fixed), color: 'var(--danger)' }], { labels: L, money: 1, marker: r.beMonth, markerLabel: 'break-even', label: 'Revenue versus total cost by month' })}</div>
+  <div class="card"><div class="between"><h2>Cash runway</h2>${legend([['var(--ok)', 'Month-end cash']])}</div>
+    ${lineChart([{ data: r.months.map(x => x.cash), color: 'var(--ok)' }], { labels: L, money: 1, label: 'Month-end cash balance' })}
+    <p class="small muted">Opening cash ${money(r.cash0)} = funding ${money(r.funding)} − startup uses ${money(r.uses)}.</p></div>
+  <div class="card"><h2>12-month P&L</h2><div class="tw"><table><thead><tr><th>$</th>${L.map(l => `<th class="n">${l}</th>`).join('')}<th class="n">Total</th></tr></thead><tbody>
+    <tr><td>Units sold</td>${r.months.map(x => `<td class="n">${n0(x.units)}</td>`).join('')}<td class="n"><b>${n0(T.units)}</b></td></tr>
+    ${row('Revenue', 'revenue')}${row('Cost of goods', 'cogs')}${row('Variable costs (incl. fees)', 'varCost')}${row('Contribution', 'contribution', { cls: 'total' })}${row('Fixed operating expenses', 'fixed')}${row('Operating result', 'opResult', { cls: 'total', neg: 1 })}${row('Interest', 'interest')}${row('Result after interest', 'net', { neg: 1 })}
+  </tbody></table></div></div>
+  <div class="card"><h2>Cash flow</h2><div class="tw"><table><thead><tr><th>$</th>${L.map(l => `<th class="n">${l}</th>`).join('')}</tr></thead><tbody>
+    <tr><td>Cash receipts</td>${r.months.map(x => `<td class="n">${money(x.receipts)}</td>`).join('')}</tr>
+    <tr><td>Operating payments</td>${r.months.map(x => `<td class="n">${money(x.payments)}</td>`).join('')}</tr>
+    <tr><td>Debt service</td>${r.months.map(x => `<td class="n">${money(x.debtService)}</td>`).join('')}</tr>
+    <tr class="total"><td>Month-end cash</td>${r.months.map(x => `<td class="n" style="${x.cash < 0 ? 'color:var(--danger)' : ''}">${money(x.cash)}</td>`).join('')}</tr>
+  </tbody></table></div></div>
+  <div class="card"><h2>Scenarios</h2><div class="tw"><table><thead><tr><th></th>${sc.map(s => `<th class="n">${s.key[0].toUpperCase() + s.key.slice(1)}</th>`).join('')}</tr></thead><tbody>
+    <tr><td>Settings (volume / price / cost)</td>${sc.map(s => `<td class="n small">${s.key === 'base' ? 'As entered' : `${p.settings.scenarios[s.key].vol}% / ${p.settings.scenarios[s.key].price}% / ${p.settings.scenarios[s.key].cost}%`}</td>`).join('')}</tr>
+    <tr><td>12-mo revenue</td>${sc.map(s => `<td class="n">${money(s.r.totals.revenue)}</td>`).join('')}</tr>
+    <tr><td>12-mo operating result</td>${sc.map(s => `<td class="n" style="color:${s.r.totals.opResult < 0 ? 'var(--danger)' : 'inherit'}">${money(s.r.totals.opResult)}</td>`).join('')}</tr>
+    <tr><td>Lowest cash</td>${sc.map(s => `<td class="n" style="color:${s.r.minCash < 0 ? 'var(--danger)' : 'inherit'}">${money(s.r.minCash)}</td>`).join('')}</tr>
+  </tbody></table></div><p class="small muted">Change scenario settings in Settings.</p></div>
+  <div class="card"><h2>Sensitivity: 12-month operating result</h2><div class="tw"><table><thead><tr><th>Volume \\ Price</th>${sens[0].cells.map(c => `<th class="n">${c.price > 0 ? '+' : ''}${Math.round(c.price * 100)}%</th>`).join('')}</tr></thead><tbody>
+    ${sens.map(rw => `<tr><td>${rw.vol > 0 ? '+' : ''}${Math.round(rw.vol * 100)}%</td>${rw.cells.map(c => `<td class="n" style="${c.op < 0 ? 'color:var(--danger)' : ''}${c.price === 0 && rw.vol === 0 ? ';font-weight:700' : ''}">${money(c.op)}</td>`).join('')}</tr>`).join('')}
+  </tbody></table></div></div>
+  <details class="panel"><summary data-act="toggle-panel" data-v="formulas"><span class="chev">${ICON.chev}</span><h3>Formulas used</h3></summary><div class="body small">
+    <p>Revenue = units × weighted price × channel realization. Weighted price = Σ(mix × price).</p>
+    <p>Variable cost = units × weighted unit cost + revenue × payment fee %. Contribution = revenue − variable cost.</p>
+    <p>Fixed = listed fixed expenses + model extra fixed + payroll (hours × rate × 4.33 × (1 + payroll tax %)) + channel marketing spend.</p>
+    <p>Operating result = contribution − fixed. Interest is shown separately below operating result. Owner pay is not an expense here.</p>
+    <p>Break-even units / month = fixed ÷ unit contribution (weighted across SKUs and channels). None when unit contribution ≤ 0.</p>
+    <p>Demand: new customers = contacts × lead % × qualified % × close %; repeat orders = past customers × repeat %; units = orders × units per order × seasonality. Units sold = min(demand, capacity); capacity = min(equipment setting, (owner + staff hours) ÷ hours per unit).</p>
+    <p>Cash = prior cash + receipts − operating payments − debt service. Receipts lag revenue by each channel’s collection days (rounded to months). Opening cash = funding − startup uses.</p>
+  </div></details>
+  <div class="flex"><button class="btn" data-act="export-csv" data-v="pl">Export P&L (CSV)</button><button class="btn" data-act="export-csv" data-v="cash">Export cash flow (CSV)</button><button class="btn" data-act="export-csv" data-v="assumptions">Export assumptions (CSV)</button></div>`;
+}
+
+/* Risks & Compliance */
+SCREEN_FN.risks = () => {
+  const p = P(); if (!p) return needProject();
+  const g = riskGate(p);
+  const sevs = ['Critical', 'High', 'Medium', 'Low'];
+  const tbl = type => `<div class="tw"><table><thead><tr><th>Issue</th><th>Geography</th><th>Source</th><th>Status</th><th>Severity</th><th>Owner</th><th>Mitigation</th><th>Due</th>${type === 'Legal requirement' ? '<th>Ack.</th>' : ''}<th></th></tr></thead><tbody>
+    ${p.risks.map((x, i) => x.type !== type ? '' : `<tr><td style="min-width:200px"><textarea rows="2" data-path="risks.${i}.issue" aria-label="Issue">${esc(x.issue)}</textarea>${x.note ? `<div class="small" style="color:var(--warn)">${esc(x.note)}</div>` : ''}</td><td style="min-width:120px"><input data-path="risks.${i}.geography" value="${esc(x.geography)}" aria-label="Geography"></td><td style="min-width:150px"><input data-path="risks.${i}.source" value="${esc(x.source)}" aria-label="Source"></td>
+      <td><select data-path="risks.${i}.status" aria-label="Status">${['Unverified', 'Verified', 'Not Applicable'].map(s => `<option ${s === x.status ? 'selected' : ''}>${s}</option>`).join('')}</select></td>
+      <td><select data-path="risks.${i}.severity" aria-label="Severity">${sevs.map(s => `<option ${s === x.severity ? 'selected' : ''}>${s}</option>`).join('')}</select></td>
+      <td style="min-width:100px"><input data-path="risks.${i}.owner" value="${esc(x.owner)}" aria-label="Owner"></td><td style="min-width:200px"><textarea rows="2" data-path="risks.${i}.mitigation" aria-label="Mitigation">${esc(x.mitigation)}</textarea></td><td><input type="date" data-path="risks.${i}.due" value="${esc(x.due)}" aria-label="Due date"></td>
+      ${type === 'Legal requirement' ? `<td>${x.severity === 'Critical' && x.status === 'Unverified' ? `<button class="btn sm" data-act="risk-ack" data-v="${esc(x.id)}" ${p.settings.consultant ? '' : 'disabled title="Consultant mode only"'}>${x.ack ? 'Acknowledged' : 'Acknowledge…'}</button>` : ''}</td>` : ''}
+      <td><button class="btn ghost sm" data-act="row-del" data-path="risks" data-i="${i}">Remove</button></td></tr>`).join('')}</tbody></table></div>
+    <div><button class="btn sm" data-act="row-add" data-path="risks" data-tpl="${esc(JSON.stringify({ issue: '', geography: [p.profile.city, p.profile.state].filter(Boolean).join(', '), source: '', status: 'Unverified', severity: 'Medium', type, owner: 'Owner', mitigation: type === 'Legal requirement' ? 'Verify with authority.' : '', due: '', ack: false, note: '' }))}">+ Add ${type === 'Legal requirement' ? 'requirement' : 'recommendation'}</button></div>`;
+  return `${headHTML('Risks & Compliance', 'Requirements and risks by place, with who owns each one and when it is due.')}
+  <div class="note danger"><b>Legal, tax and licensing requirements need independent verification.</b> This register lists items to confirm with the issuing authority, an attorney or a tax professional. Mete Business Blueprint does not grant approvals or give legal advice.</div>
+  <div class="card"><div class="between"><div><h2>Ready for Launch gate</h2><p class="small muted">Passes when every Critical item is Verified, Not Applicable, or acknowledged by a consultant.</p></div>
+    <div class="flex"><span class="chip ${g.pass ? 'c-ok' : 'c-bad'}">${g.pass ? 'Gate passes' : g.open.length + ' critical item(s) open'}</span><button class="btn ${p.readyForLaunch ? '' : 'primary'}" data-act="ready-launch" ${g.pass ? '' : 'disabled'}>${p.readyForLaunch ? 'Marked ready for launch' : 'Mark ready for launch'}</button></div></div>
+    ${g.open.length ? `<ul class="small" style="margin:0;padding-left:18px">${g.open.map(x => `<li>${esc(x.issue)}</li>`).join('')}</ul>` : ''}</div>
+  <div class="card"><h2>Legal requirements</h2>${tbl('Legal requirement')}</div>
+  <div class="card"><h2>Recommendations</h2>${tbl('Recommendation')}</div>`;
+};
+
+/* 90-day plan */
+SCREEN_FN.plan = () => {
+  const p = P(); if (!p) return needProject();
+  const done = p.tasks.filter(t => t.done).length;
+  const top = p.tasks.filter(t => !t.done).slice().sort((a, b) => num(b.value) - num(a.value) || num(a.week) - num(b.week)).slice(0, 3).map(t => t.id);
+  const byId = Object.fromEntries(p.tasks.map(t => [t.id, t]));
+  const filt = S.planGroup || 'All';
+  const weeks = [...new Set(p.tasks.map(t => num(t.week)))].sort((a, b) => a - b);
+  const taskCard = t => { const i = p.tasks.indexOf(t); const dep = byId[t.dependsOn]; const blocked = dep && !dep.done;
+    return `<div class="task ${top.includes(t.id) ? 'top' : ''} ${t.done ? 'done' : ''}">
+      <div class="between"><span class="label">${esc(t.group)}</span>${top.includes(t.id) ? '<span class="eyebrow">Top 3 action</span>' : ''}</div>
+      <label class="flex" style="align-items:flex-start;flex-wrap:nowrap"><input type="checkbox" data-path="tasks.${i}.done" ${t.done ? 'checked' : ''} aria-label="Done"><span class="tt">${esc(t.title)}</span></label>
+      <div class="small muted">${esc(t.owner)} · ${esc(t.duration)} · ${money(num(t.cost))}${t.evidence ? ' · ' + esc(t.evidence) : ''}</div>
+      ${dep ? `<div class="small" style="color:${blocked ? 'var(--warn)' : 'var(--ok)'}">${blocked ? 'Waiting on' : 'After'}: ${esc(dep.title)}</div>` : ''}
+      <div class="flex"><button class="btn sm ghost" data-act="task-move" data-v="${esc(t.id)}" data-d="-1" aria-label="Move earlier">↑ Earlier</button><button class="btn sm ghost" data-act="task-move" data-v="${esc(t.id)}" data-d="1" aria-label="Move later">↓ Later</button><button class="btn sm ghost" data-act="task-edit" data-v="${esc(t.id)}">Edit</button></div></div>`; };
+  return `${headHTML('90-Day Launch Plan', 'Week-by-week tasks. Completing tasks raises readiness; the three highest-value open tasks are highlighted.', `<button class="btn" data-act="export-csv" data-v="tasks">Export checklist (CSV)</button><button class="btn primary" data-act="task-new">Add task</button>`)}
+  <div class="card"><div class="between"><div><span class="label">Readiness</span><div class="figure" style="font:600 24px/30px var(--font-sans)">${p.tasks.length ? Math.round(done / p.tasks.length * 100) : 0}%</div></div><div style="flex:1;min-width:200px"><div class="bar-meter"><i style="width:${p.tasks.length ? done / p.tasks.length * 100 : 0}%"></i></div><span class="small muted">${done} of ${p.tasks.length} tasks done · ${money(p.tasks.reduce((s, t) => s + num(t.cost), 0))} planned spend</span></div></div>
+  <div class="flex">${['All', ...GROUPS].map(g => `<button class="btn sm ${filt === g ? 'primary' : ''}" data-act="plan-group" data-v="${g}">${g}</button>`).join('')}</div></div>
+  ${weeks.map(w => { const ts = p.tasks.filter(t => num(t.week) === w && (filt === 'All' || t.group === filt)); return ts.length ? `<section class="stack-sm"><h2>Week ${w}</h2><div class="board">${ts.map(taskCard).join('')}</div></section>` : ''; }).join('')}`;
+};
+function taskModal(t) {
+  const p = P(); const isNew = !t; t = t || { id: uid('t'), week: 1, group: 'Setup', title: '', owner: 'Owner', dependsOn: '', cost: 0, duration: '1 day', evidence: '', done: false, value: 3 };
+  openModal(`<h2>${isNew ? 'Add task' : 'Edit task'}</h2><form class="stack-sm" data-form="task" data-id="${esc(t.id)}" data-new="${isNew ? 1 : ''}">
+    <div class="f"><label class="label" for="tk-title">Task</label><input id="tk-title" name="title" required value="${esc(t.title)}"></div>
+    <div class="grid2"><div class="f"><label class="label" for="tk-week">Week</label><input id="tk-week" name="week" type="number" min="1" max="13" value="${esc(t.week)}"></div><div class="f"><label class="label" for="tk-group">Group</label><select id="tk-group" name="group">${GROUPS.map(g => `<option ${g === t.group ? 'selected' : ''}>${g}</option>`).join('')}</select></div>
+    <div class="f"><label class="label" for="tk-owner">Owner</label><input id="tk-owner" name="owner" value="${esc(t.owner)}"></div><div class="f"><label class="label" for="tk-dur">Duration</label><input id="tk-dur" name="duration" value="${esc(t.duration)}"></div>
+    <div class="f"><label class="label" for="tk-cost">Cost ($)</label><input id="tk-cost" name="cost" type="number" value="${esc(t.cost)}"></div><div class="f"><label class="label" for="tk-val">Value (1–5)</label><input id="tk-val" name="value" type="number" min="1" max="5" value="${esc(t.value)}"></div></div>
+    <div class="f"><label class="label" for="tk-dep">Depends on</label><select id="tk-dep" name="dependsOn"><option value="">Nothing</option>${p.tasks.filter(x => x.id !== t.id).map(x => `<option value="${esc(x.id)}" ${x.id === t.dependsOn ? 'selected' : ''}>W${x.week}: ${esc(x.title.slice(0, 60))}</option>`).join('')}</select></div>
+    <div class="f"><label class="label" for="tk-ev">Evidence</label><input id="tk-ev" name="evidence" value="${esc(t.evidence)}"></div>
+    <div class="between">${isNew ? '<span></span>' : `<button type="button" class="btn danger" data-act="task-del" data-v="${esc(t.id)}">Delete task</button>`}<div class="flex"><button type="button" class="btn" data-act="modal-close">Cancel</button><button class="btn primary" type="submit">Save task</button></div></div></form>`);
+}
+
+/* Report */
+SCREEN_FN.report = () => {
+  const p = P(); if (!p) return needProject();
+  const variant = p.settings.reportVariant || 'client';
+  return `${headHTML('Blueprint Report', 'Preview of the report as it will export. It reflects every edit in this blueprint.', `
+    <div class="flex"><label class="label" for="rv">Variant</label><select id="rv" data-path="settings.reportVariant" style="width:auto"><option value="client" ${variant === 'client' ? 'selected' : ''}>Client-facing</option><option value="internal" ${variant === 'internal' ? 'selected' : ''}>Internal consultant</option></select></div>`)}
+  <div class="card"><h2>Export</h2><div class="flex"><button class="btn primary" data-act="export-report">Download report (HTML)</button><button class="btn" data-act="export-csv" data-v="pl">P&L (CSV)</button><button class="btn" data-act="export-csv" data-v="cash">Cash flow (CSV)</button><button class="btn" data-act="export-csv" data-v="tasks">Launch checklist (CSV)</button><button class="btn" data-act="export-json">Project backup (JSON)</button></div>
+    <p class="small muted"><b>PDF:</b> open the downloaded HTML report in a browser and use Print → Save as PDF; it is laid out for letter paper. <b>DOCX:</b> not available in this version (needs the server-side export service planned for Phase 2). Word can open the HTML report directly.</p>
+    ${p.status === 'Ready' ? `<div class="flex"><button class="btn brass" data-act="publish">Mark as Published</button><span class="small muted">Records that the client-facing report was delivered.</span></div>` : ''}</div>
+  <div class="sheet" id="report-sheet">${reportHTML(p, variant)}</div>`;
+};
+function reportHTML(p, variant) {
+  const r = Engine.run(p); const T = r.totals; const L = r.months.map(x => monthLabel(r, x.i)); const sc = capScores(p, r);
+  const internal = variant === 'internal';
+  const items = reviewItems(p, r);
+  const secs = ['Executive summary', 'Business model', 'Local market & competition', 'CAP strategy', 'OPS setup & operating manual', 'Staffing & equipment', 'Financial statements', 'Risk register', '90-day roadmap', 'Assumptions & source appendix'].concat(internal ? ['Consultant notes & audit'] : []);
+  let pg = 1; const page = () => `<div class="pg">Mete Business Blueprint · ${esc(p.name)} · page ${++pg}</div>`;
+  const tagged = (label, a) => `<tr><td>${label}</td><td class="n">${esc(a.v)}</td><td><span class="chip ${tagClass(a.tag)}">${esc(a.tag)}</span></td><td class="small">${esc((p.sources.find(s => s.id === a.src) || {}).title || '—')}</td></tr>`;
+  return `
+  <div class="cover"><div class="eyebrow" style="color:#7d6213">Mete Business Consulting · Business Blueprint${internal ? ' · Internal' : ''}</div><h1>${esc(p.name)}</h1>
+    <div class="muted">${esc(p.profile.product || 'Product not provided')} · ${esc([p.profile.city, p.profile.state].filter(Boolean).join(', ') || 'Location not provided')} · ${p.profile.stage === 'existing' ? 'Existing business' : 'Startup'}</div>
+    <div class="muted small">Prepared ${new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })} · Status: ${esc(p.status)}${p.signedOff ? ' · Consultant sign-off ' + when(p.signedOff.at) : ' · Not yet signed off'}</div>
+    ${p.illustrative ? '<div><span class="illus">Illustrative example: sample data, not a real business</span></div>' : ''}</div>
+  <div><h3>Contents</h3><ol class="small" style="margin:6px 0 0;padding-left:20px;columns:2">${secs.map(s => `<li>${s}</li>`).join('')}</ol></div>
+  ${page()}
+  <h2>1. Executive summary</h2>
+  <p>${esc(p.name)} plans to sell ${esc(p.profile.product || 'its product')} in ${esc([p.profile.city, p.profile.state].filter(Boolean).join(', ') || 'its market')} using the <b>${esc(r.model.name)}</b> operating model. In the first 12 months the model projects <b>${money(T.revenue)}</b> of revenue (not profit), a contribution margin of <b>${pct(r.ue.contributionMargin)}</b>, and a 12-month operating result of <b>${money(T.opResult)}</b> before owner pay and income tax. ${r.beUnits === null ? 'As entered, each unit loses money, so there is no break-even point.' : `Break-even is about ${n0(r.beUnits)} units per month${r.beMonth >= 0 ? `, first reached in ${L[r.beMonth]}` : ', not reached within 12 months'}.`} Cash ${r.firstNegCash >= 0 ? `goes negative in ${L[r.firstNegCash]} (low of ${money(r.minCash)})` : `stays positive, with a low of ${money(r.minCash)}`}.</p>
+  <h3>First three actions</h3><ol style="margin:0;padding-left:20px">${p.tasks.filter(t => !t.done).sort((a, b) => num(b.value) - num(a.value) || num(a.week) - num(b.week)).slice(0, 3).map(t => `<li>${esc(t.title)} (week ${t.week})</li>`).join('')}</ol>
+  ${items.filter(i => i.blocking).length ? `<p class="small"><b>Open issues:</b> ${items.filter(i => i.blocking).map(i => esc(i.text)).join(' ')}</p>` : ''}
+  <h2>2. Business model</h2>
+  <div class="tw"><table><thead><tr><th>Product</th><th class="n">Price</th><th class="n">Unit cost</th><th class="n">Mix</th><th>Basis</th></tr></thead><tbody>${p.products.map(x => `<tr><td>${esc(x.name)}</td><td class="n">${money(num(x.price), 2)}</td><td class="n">${money(num(x.unitCost), 2)}</td><td class="n">${n1(num(x.mix))}%</td><td><span class="chip ${tagClass(x.tag)}">${esc(x.tag)}</span></td></tr>`).join('')}</tbody></table></div>
+  <div class="tw"><table><thead><tr><th>Channel</th><th class="n">Share</th><th class="n">Realized</th><th class="n">Collect days</th><th class="n">Spend / mo</th></tr></thead><tbody>${p.channels.map(c => `<tr><td>${esc(c.name)}</td><td class="n">${n1(num(c.share))}%</td><td class="n">${n1(num(c.realization))}%</td><td class="n">${n0(num(c.collectDays))}</td><td class="n">${money(num(c.spend))}</td></tr>`).join('')}</tbody></table></div>
+  <h2>3. Local market & competition</h2>
+  ${p.sources.filter(s => ['Market', 'Customer', 'Competitors'].includes(s.category)).map(s => `<p class="small">• ${esc(s.claim)}${s.value ? ': <b>' + esc(s.value) + '</b>' : ''} <span class="chip ${tagClass(s.kind)}">${esc(s.kind)}</span></p>`).join('') || '<p class="small muted">No market evidence entered. Live research was not available.</p>'}
+  ${p.competitors.length ? `<div class="tw"><table><thead><tr><th>Competitor</th><th>Location</th><th class="n">Price</th><th>Notes</th></tr></thead><tbody>${p.competitors.map(c => `<tr><td>${esc(c.name)}</td><td>${esc(c.location)}</td><td class="n">${money(num(c.price), 2)}</td><td class="small">${esc(c.note)}</td></tr>`).join('')}</tbody></table></div>` : ''}
+  ${page()}
+  <h2>4. CAP strategy</h2>
+  <p class="small muted">Scores use Mete’s internal rules; they are not an external rating.</p>
+  <div class="tw"><table><thead><tr><th>Area</th><th class="n">Score</th><th>Top gap</th></tr></thead><tbody>${CAP_PANELS.map(([k, t]) => { const o = sc[k]; const f = o.rules.find(x => !x.pass); return `<tr><td>${t}</td><td class="n">${o.score}/100</td><td class="small">${f ? esc(f.rule.action) : 'None'}</td></tr>`; }).join('')}</tbody></table></div>
+  <p><b>Target customer.</b> ${esc(p.capPlan.customer || 'Not provided')}</p><p><b>Positioning.</b> ${esc(p.capPlan.positioning || 'Not provided')}</p><p><b>Messaging.</b> ${esc(p.capPlan.messaging || 'Not provided')}</p>
+  <p><b>Lead handling.</b> ${esc(p.capPlan.leadHandling || 'Not provided')}</p><p><b>Retention.</b> ${esc(p.capPlan.retention || 'Not provided')}</p><p><b>KPI targets.</b> ${esc(p.capPlan.kpis || 'Not provided')}</p>
+  <p class="small">Cost per acquisition ${Number.isFinite(r.cac) ? money(r.cac, 2) : 'n/a'} · contribution per order ${money(r.custContribution, 2)} · payback ${r.paybackOrders === null ? 'never' : n1(r.paybackOrders) + ' orders'}.</p>
+  <h2>5. OPS setup & operating manual</h2>
+  <p><b>Operating model:</b> ${esc(r.model.name)}. ${esc(r.model.tradeoffs)} <b>Facility:</b> ${esc(p.ops.facility || 'Not provided')}.</p>
+  ${p.ops.sops.map((s, i) => `<p class="small"><b>${i + 1}. ${esc(s.step)}</b> · Trigger: ${esc(s.trigger || '—')} · Owner: ${esc(s.owner || '—')} · Duration: ${esc(s.duration || '—')}<br>${esc(s.steps || 'Steps not written yet.')}${s.checks ? ' Checks: ' + esc(s.checks) + '.' : ''}${s.escalation ? ' Escalation: ' + esc(s.escalation) + '.' : ''}</p>`).join('')}
+  ${page()}
+  <h2>6. Staffing & equipment</h2>
+  <p class="small">Owner ${n1(av(p.fin.a.ownerHours))} hrs/week. ${(r.model.staff || []).map(s => `${esc(s.role)}: ${n1(num(s.hours))} hrs/week at ${money(num(s.rate), 2)}/hr`).join('; ') || 'No paid staff.'} Monthly payroll incl. taxes ${money(r.payroll)}. Capacity ${Number.isFinite(r.capacity) ? n0(r.capacity) + ' units/month' : 'not limited'}.</p>
+  <div class="tw"><table><thead><tr><th>Equipment</th><th class="n">Cost</th></tr></thead><tbody>${(r.model.equipment || []).map(e => `<tr><td>${esc(e.item)}</td><td class="n">${money(num(e.cost))}</td></tr>`).join('')}<tr class="total"><td>Total</td><td class="n">${money(r.equipment)}</td></tr></tbody></table></div>
+  <h2>7. Financial statements</h2>
+  <div class="tw"><table><thead><tr><th>$</th>${L.map(l => `<th class="n">${l}</th>`).join('')}<th class="n">Total</th></tr></thead><tbody>
+    ${[['Revenue', 'revenue'], ['Variable costs', 'varCost'], ['Contribution', 'contribution'], ['Fixed expenses', 'fixed'], ['Operating result', 'opResult'], ['Interest', 'interest'], ['Month-end cash', 'cash']].map(([l, k]) => `<tr class="${k === 'opResult' || k === 'cash' ? 'total' : ''}"><td>${l}</td>${r.months.map(x => `<td class="n">${compactMoney(x[k])}</td>`).join('')}<td class="n">${k === 'cash' ? '' : compactMoney(T[k])}</td></tr>`).join('')}
+  </tbody></table></div>
+  <p class="small">Startup uses ${money(r.uses)}; funding ${money(r.funding)} (${p.fin.funding.map(f => `${esc(f.name)} ${money(num(f.amount))}${f.type === 'Loan' ? ` at ${n1(num(f.rate))}% for ${n0(num(f.term))} mo` : ''}`).join('; ')}). Prices exclude sales tax; income tax is not modeled.</p>
+  ${page()}
+  <h2>8. Risk register</h2>
+  <p class="small"><b>Legal, tax and licensing requirements need independent verification.</b></p>
+  <div class="tw"><table><thead><tr><th>Issue</th><th>Type</th><th>Status</th><th>Severity</th><th>Owner</th><th>Due</th></tr></thead><tbody>${p.risks.map(x => `<tr><td class="small">${esc(x.issue)}</td><td class="small">${esc(x.type)}</td><td>${esc(x.status === 'Unverified' ? 'Verify with authority' : x.status)}</td><td>${esc(x.severity)}</td><td>${esc(x.owner)}</td><td>${esc(x.due || '—')}</td></tr>`).join('')}</tbody></table></div>
+  <h2>9. 90-day roadmap</h2>
+  <div class="tw"><table><thead><tr><th class="n">Wk</th><th>Task</th><th>Group</th><th>Owner</th><th class="n">Cost</th><th>Done</th></tr></thead><tbody>${p.tasks.slice().sort((a, b) => num(a.week) - num(b.week)).map(t => `<tr><td class="n">${t.week}</td><td class="small">${esc(t.title)}</td><td class="small">${esc(t.group)}</td><td>${esc(t.owner)}</td><td class="n">${money(num(t.cost))}</td><td>${t.done ? 'Yes' : ''}</td></tr>`).join('')}</tbody></table></div>
+  ${page()}
+  <h2>10. Assumptions & source appendix</h2>
+  <div class="tw"><table><thead><tr><th>Assumption</th><th class="n">Value</th><th>Basis</th><th>Source</th></tr></thead><tbody>
+    ${tagged('Contacts / month', p.fin.a.contacts)}${tagged('Lead rate %', p.fin.a.leadRate)}${tagged('Qualified rate %', p.fin.a.qualRate)}${tagged('Close rate %', p.fin.a.closeRate)}${tagged('Repeat rate % / mo', p.fin.a.repeatRate)}${tagged('Units per order', p.fin.a.unitsPerOrder)}${tagged('Contact growth % / mo', p.fin.a.growth)}${tagged('Payment fees %', p.fin.a.paymentFee)}${tagged('Payroll taxes %', p.fin.a.payrollTax)}${tagged('Owner hours / week', p.fin.a.ownerHours)}${tagged('Labor hours / unit', p.fin.a.hoursPerUnit)}
+  </tbody></table></div>
+  <ol class="small" style="padding-left:20px">${p.sources.map(s => `<li>${esc(s.title || 'Untitled source')}${s.url ? ' · ' + esc(s.url) : ''} · ${esc(s.kind)} · published ${esc(s.date || 'unknown')} · accessed ${esc(s.accessed || 'unknown')} · ${esc(s.location || '')}${s.flagged ? ' · MARKED INCORRECT' : ''}</li>`).join('') || '<li>No sources entered.</li>'}</ol>
+  ${internal ? `${page()}<h2>11. Consultant notes & audit</h2>
+    <div class="tw"><table><thead><tr><th>Review item</th><th>Blocking</th><th>Decision</th><th>Reason</th></tr></thead><tbody>${items.map(i => { const d = p.reviewDecisions[i.id]; return `<tr><td class="small">${esc(i.text)}</td><td>${i.blocking ? 'Yes' : ''}</td><td>${esc(d?.status || 'Open')}</td><td class="small">${esc(d?.reason || '')}</td></tr>`; }).join('')}</tbody></table></div>
+    <p class="small">Audit entries: ${p.audit.length}. Last change ${when(p.updatedAt)}.</p>` : ''}
+  <div class="pg">End of report</div>`;
+}
+
+/* Consultant Review */
+SCREEN_FN.review = () => {
+  const p = P(); if (!p) return needProject();
+  const r = Engine.run(p); const items = reviewItems(p, r); const ob = openBlocking(p, items); const g = riskGate(p);
+  const cons = p.settings.consultant;
+  const kinds = ['Critical compliance item', 'Financial anomaly', 'Unsupported assumption', 'Conflicting recommendation', 'Manual'];
+  const order = (a, b) => (b.blocking - a.blocking) || kinds.indexOf(a.kind) - kinds.indexOf(b.kind);
+  return `${headHTML('Consultant Review', 'Claims, anomalies and compliance items to approve, revise, reject or send back for research. Material overrides need a reason.', `<button class="btn" data-act="review-add" ${cons ? '' : 'disabled'}>Add review item</button>`)}
+  ${cons ? '' : `<div class="note">Turn on Consultant mode in Settings to act on review items. <button class="btn sm" data-act="consultant-on">Turn on now</button></div>`}
+  <div class="card"><div class="between"><div><h2>Sign-off</h2><p class="small muted">Available once every blocking item is approved or rejected with a reason and the Ready for Launch gate passes.</p></div>
+    <div class="flex"><span class="chip ${ob.length ? 'c-bad' : 'c-ok'}">${ob.length} blocking open</span><span class="chip ${g.pass ? 'c-ok' : 'c-bad'}">Risk gate ${g.pass ? 'passes' : 'open'}</span>
+    ${p.signedOff ? `<span class="chip c-ok">Signed off ${when(p.signedOff.at)} by ${who(p.signedOff.actor)}</span>` : `<button class="btn primary" data-act="signoff" ${!cons || ob.length || !g.pass ? 'disabled' : ''}>Consultant sign-off</button>`}</div></div></div>
+  <div class="stack">${items.sort(order).map(i => { const d = p.reviewDecisions[i.id];
+    return `<div class="card" style="${i.blocking && !['Approve', 'Reject'].includes(d?.status) ? 'border-color:var(--danger)' : ''}"><div class="between"><div class="flex"><span class="label">${esc(i.kind)}</span>${i.blocking ? '<span class="chip c-bad">Blocking</span>' : ''}${d ? `<span class="chip ${d.status === 'Approve' ? 'c-ok' : d.status === 'Reject' ? 'c-info' : 'c-warn'}">${esc(d.status === 'Approve' ? 'Approved' : d.status === 'Reject' ? 'Rejected' : d.status)}</span>` : '<span class="chip s-Draft">Open</span>'}</div>
+      ${cons ? `<div class="flex">${['Approve', 'Revise', 'Reject', 'Request More Research'].map(a => `<button class="btn sm" data-act="decide" data-v="${esc(i.id)}" data-s="${a}" data-b="${i.blocking ? 1 : 0}">${a}</button>`).join('')}</div>` : ''}</div>
+      <p>${esc(i.text)}</p>${i.detail ? `<p class="small muted">${esc(i.detail)}</p>` : ''}
+      ${d ? `<p class="small muted">${who(d.actor)} · ${when(d.at)}${d.reason ? ' · “' + esc(d.reason) + '”' : ''}</p>` : ''}</div>`; }).join('') || '<div class="empty"><p class="muted">Nothing to review.</p></div>'}</div>
+  <details class="panel" ${S.expanded.audit ? 'open' : ''}><summary data-act="toggle-panel" data-v="audit"><span class="chev">${ICON.chev}</span><h2>Audit log</h2><span class="small muted">${p.audit.length} entries</span></summary><div class="body"><div class="tw"><table><thead><tr><th>When</th><th>Who</th><th>Action</th><th>Field</th><th>Before</th><th>After</th><th>Reason</th></tr></thead><tbody>
+    ${p.audit.slice().reverse().slice(0, 150).map(a => `<tr><td class="small" style="white-space:nowrap">${when(a.at)}</td><td class="small">${who(a.actor)}</td><td class="small">${esc(a.action)}</td><td class="small">${esc(a.path || '')}</td><td class="small">${esc(String(a.before ?? '').slice(0, 60))}</td><td class="small">${esc(String(a.after ?? '').slice(0, 60))}</td><td class="small">${esc(a.reason || '')}</td></tr>`).join('')}</tbody></table></div></div></details>`;
+};
+
+/* Settings */
+SCREEN_FN.settings = () => {
+  const p = P(); if (!p) return needProject();
+  return `${headHTML('Settings', 'Options for this blueprint.')}
+  <div class="card"><h2>Mode</h2><label class="flex"><input type="checkbox" data-path="settings.consultant" ${p.settings.consultant ? 'checked' : ''}> Consultant mode: review actions, editable CAP rule points, risk acknowledgments</label></div>
+  <div class="card"><h2>Status</h2><div class="grid3">${fld('Blueprint status', 'status', { type: 'select', options: STATUSES, help: 'Ready is set by consultant sign-off; changing it by hand is logged.' })}</div></div>
+  <div class="card"><h2>Scenarios</h2><p class="small muted">Percent of base. 100 = unchanged.</p><div class="grid3">
+    ${['best', 'worst'].map(k => `${fld(k[0].toUpperCase() + k.slice(1) + ' case volume', `settings.scenarios.${k}.vol`, { type: 'num', suffix: '%' })}${fld(k[0].toUpperCase() + k.slice(1) + ' case price', `settings.scenarios.${k}.price`, { type: 'num', suffix: '%' })}${fld(k[0].toUpperCase() + k.slice(1) + ' case unit cost', `settings.scenarios.${k}.cost`, { type: 'num', suffix: '%' })}`).join('')}</div></div>
+  <div class="card"><h2>CAP scoring rules</h2><p class="small muted">${Object.keys(p.capWeights).length} rule weight(s) changed from the defaults.</p><div><button class="btn sm" data-act="reset-weights" ${Object.keys(p.capWeights).length ? '' : 'disabled'}>Reset rule points to defaults</button></div></div>
+  <div class="card"><h2>Version history</h2><p class="small muted">Save a named snapshot you can restore later. Restoring keeps the current version as a snapshot first, so nothing is lost.</p>
+    <form class="flex" data-form="snapshot"><input name="label" placeholder="Snapshot name, e.g. Before pricing change" style="max-width:340px" required aria-label="Snapshot name"><button class="btn primary" type="submit">Save version</button></form>
+    <div data-live="versions" class="stack-sm">${versionsHTML()}</div></div>
+  <div class="card"><h2>Data</h2><p class="small muted">${S.storeMode === 'shared' ? 'Blueprints are stored with this page. Everyone the page is shared with can open and edit them. Use the page’s Share menu to control who has access.' : 'Blueprints are stored in this browser only.'}</p>
+    <div class="flex"><button class="btn" data-act="export-json">Download project backup (JSON)</button><button class="btn danger" data-act="delete-ask">Delete this blueprint…</button></div></div>`;
+};
+LIVE.versions = () => versionsHTML();
+function versionsHTML() {
+  const vs = S.versions?.[S.cur];
+  if (!S.db) return '<p class="small muted">Version history needs shared saving, which is not available in this view.</p>';
+  if (!vs) { loadVersions(); return '<p class="small muted">Loading versions…</p>'; }
+  if (!vs.length) return '<p class="small muted">No saved versions yet.</p>';
+  return vs.map(v => `<div class="between small"><span><b>${esc(v.label)}</b> · ${when(v.at)} · ${who(v.actor)}</span><button class="btn sm" data-act="restore" data-v="${esc(v.vid)}">Restore</button></div>`).join('');
+}
+async function loadVersions() {
+  if (!S.db || !S.cur) return; S.versions = S.versions || {};
+  const id = S.cur;
+  try { const snap = await S.db.collection('projects/' + id + '/versions').get(); S.versions[id] = snap.docs.map(d => Object.assign({ vid: d.id }, d.data().meta)).sort((a, b) => b.at.localeCompare(a.at)); }
+  catch (e) { S.versions[id] = []; }
+  renderLive('versions'); fillNames();
+}
+async function saveVersion(label) {
+  const p = P(); if (!S.db || !p) return toast('Version history needs shared saving.');
+  const vid = uid('v'); const meta = { label, at: new Date().toISOString(), actor: S.me || '' };
+  try { await S.db.doc('projects/' + p.id + '/versions/' + vid).set({ meta, project: clone(p) }); logAudit(p, { action: 'Saved version', after: label }); markDirty(p); S.versions[p.id] = null; loadVersions(); toast('Version saved: ' + label); }
+  catch (e) { toast(e?.code === 'quota_exceeded' ? 'Storage is full. Delete old blueprints to save versions.' : 'Could not save the version.'); }
+}
+
+/* ---------- modal + toast ---------- */
+function openModal(html) { $('#modal-root').innerHTML = `<div class="modal-bg" data-act="modal-bg"><div class="modal" role="dialog" aria-modal="true">${html}</div></div>`; setTimeout(() => $('#modal-root input, #modal-root textarea')?.focus(), 30); }
+function closeModal() { $('#modal-root').innerHTML = ''; }
+let toastT; function toast(msg) { $('#toast-root').innerHTML = `<div class="toast">${esc(msg)}</div>`; clearTimeout(toastT); toastT = setTimeout(() => { $('#toast-root').innerHTML = ''; }, 3200); }
+function reasonModal(title, body, onOk, required = true) {
+  S.reasonCb = onOk;
+  openModal(`<h2>${esc(title)}</h2><p class="small">${body}</p><form class="stack-sm" data-form="reason"><div class="f"><label class="label" for="rs">Reason ${required ? '<span class="req">*</span>' : '(optional)'}</label><textarea id="rs" name="reason" ${required ? 'required' : ''} rows="3"></textarea></div><div class="flex" style="justify-content:flex-end"><button type="button" class="btn" data-act="modal-close">Cancel</button><button class="btn primary" type="submit">Confirm</button></div></form>`);
+}
+
+/* ---------- mutations ---------- */
+function setField(path, val, el) {
+  const p = P(); if (!p) return;
+  const before = getPath(p, path);
+  if (String(before) === String(val)) return;
+  setPath(p, path, val);
+  // editing an assumption value confirms it as user input
+  const m = path.match(/^fin\.a\.(\w+)\.v$/);
+  if (m && p.fin.a[m[1]].tag === 'Assumption') { p.fin.a[m[1]].tag = 'User input'; const sel = document.querySelector(`[data-path="fin.a.${m[1]}.tag"]`); if (sel) sel.value = 'User input'; }
+  const pm = path.match(/^(products|channels)\.(\d+)\.(price|unitCost|mix|share|realization)$/);
+  if (pm && p[pm[1]][pm[2]].tag === 'Assumption') { p[pm[1]][pm[2]].tag = 'User input'; const sel = document.querySelector(`[data-path="${pm[1]}.${pm[2]}.tag"]`); if (sel) sel.value = 'User input'; }
+  if (path === 'status') logAudit(p, { action: 'Changed status by hand', path, before, after: val });
+  markDirty(p, { action: 'Edited', path, before: typeof before === 'object' ? '' : before, after: val });
+  if (path === 'name') renderBar();
+}
+const STRUCTURAL = /^(settings\.consultant|settings\.reportVariant|status|risks\.\d+\.(status|severity)|tasks\.\d+\.done|ops\.quality\.\d+\.done|sources\.\d+\.(kind|confidence)|.*\.tag|.*\.src)$/;
+
+document.addEventListener('input', e => {
+  const el = e.target;
+  if (el.dataset.actInput === 'dashq') { S.dashQ = el.value; const pos = el.selectionStart; renderContent(); const n = $('#dash-q'); if (n) { n.focus(); n.setSelectionRange(pos, pos); } return; }
+  if (el.dataset.wiz) { S.wiz.data[el.dataset.wiz] = el.value; return; }
+  if (el.dataset.weight) { const p = P(); const v = num(el.value); const rule = CAP_RULES.find(r => r.id === el.dataset.weight); if (v === rule.pts) delete p.capWeights[rule.id]; else p.capWeights[rule.id] = v; markDirty(p, { action: 'Changed CAP rule points', path: 'capWeights.' + rule.id, before: rule.pts, after: v }); return; }
+  if (!el.dataset.path || el.type === 'checkbox' || el.tagName === 'SELECT') return;
+  const v = el.dataset.num ? (el.value === '' ? 0 : parseFloat(el.value)) : el.value;
+  if (el.dataset.num && !Number.isFinite(v)) return;
+  setField(el.dataset.path, v, el);
+  renderLiveExceptSave();
+});
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (el.dataset.actChange === 'pick') { S.cur = el.value; remember('cur', S.cur); render(); return; }
+  if (el.dataset.wiz) { S.wiz.data[el.dataset.wiz] = el.value; return; }
+  if (el.dataset.weight) { renderContent(); return; }
+  if (!el.dataset.path) return;
+  if (el.type === 'checkbox' || el.tagName === 'SELECT') {
+    const v = el.type === 'checkbox' ? el.checked : el.value;
+    setField(el.dataset.path, v, el);
+  }
+  if (STRUCTURAL.test(el.dataset.path) || el.tagName === 'SELECT' || el.type === 'checkbox') { const y = window.scrollY; renderSide(); renderBar(); renderContent(); window.scrollTo(0, y); }
+  else { renderSide(); }
+});
+function renderLiveExceptSave() { document.querySelectorAll('[data-live]').forEach(el => { const k = el.dataset.live; if (k !== 'save' && LIVE[k]) el.innerHTML = LIVE[k](); }); }
+
+document.addEventListener('submit', e => {
+  const f = e.target; if (!f.dataset.form) return; e.preventDefault();
+  const fd = Object.fromEntries(new FormData(f).entries()); const p = P();
+  if (f.dataset.form === 'add-source') {
+    const s = Object.assign({ id: uid('e'), flagged: false }, fd);
+    p.sources.push(s); markDirty(p, { action: 'Added evidence', path: 'sources', after: s.claim }); S.tab.research = s.category; renderContent(); toast('Evidence added');
+  }
+  if (f.dataset.form === 'task') {
+    const t = { title: fd.title, week: Math.min(13, Math.max(1, num(fd.week) || 1)), group: fd.group, owner: fd.owner, duration: fd.duration, cost: num(fd.cost), value: Math.min(5, Math.max(1, num(fd.value) || 1)), dependsOn: fd.dependsOn, evidence: fd.evidence };
+    if (f.dataset.new) { p.tasks.push(Object.assign({ id: f.dataset.id, done: false }, t)); markDirty(p, { action: 'Added task', after: t.title }); }
+    else { const x = p.tasks.find(x => x.id === f.dataset.id); const before = x.title; Object.assign(x, t); markDirty(p, { action: 'Edited task', before, after: t.title }); }
+    closeModal(); renderContent();
+  }
+  if (f.dataset.form === 'reason') { const cb = S.reasonCb; closeModal(); cb && cb(fd.reason || ''); }
+  if (f.dataset.form === 'snapshot') { saveVersion(fd.label); f.reset(); }
+  if (f.dataset.form === 'review-item') {
+    p.reviewManual = p.reviewManual || []; p.reviewManual.push({ id: uid('m'), kind: fd.kind, text: fd.text, blocking: fd.blocking === 'on' });
+    markDirty(p, { action: 'Added review item', after: fd.text }); closeModal(); renderContent(); renderSide();
+  }
+});
+
+document.addEventListener('click', async e => {
+  const t = e.target.closest('[data-act]'); if (!t) return;
+  const act = t.dataset.act; const v = t.dataset.v; const p = P();
+  if (act === 'modal-bg') { if (e.target === t) closeModal(); return; }
+  if (act === 'toggle-panel') { e.preventDefault(); S.expanded[v] = !S.expanded[v]; t.parentElement.open = S.expanded[v]; return; }
+  switch (act) {
+    case 'go': go(v); break;
+    case 'menu': S.navOpen = !S.navOpen; $('#app').classList.toggle('open', S.navOpen); break;
+    case 'open': S.cur = v; remember('cur', v); go('profile'); break;
+    case 'tab': S.tab[t.dataset.k] = v; renderContent(); break;
+    case 'modal-close': closeModal(); break;
+    case 'load-example': { const x = normalize(exampleProject()); x.owner = S.me || ''; S.projects[x.id] = x; S.cur = x.id; remember('cur', x.id); markDirty(x); go('dashboard'); toast('Illustrative example loaded'); break; }
+    case 'dup': { const src = S.projects[v]; const x = normalize(clone(src)); x.id = uid('p'); x.name = src.name + ' (copy)'; x.status = 'Draft'; x.signedOff = null; x.readyForLaunch = false; x.createdAt = x.updatedAt = new Date().toISOString(); x.owner = S.me || ''; x.audit = [{ at: x.createdAt, actor: S.me || '', action: 'Duplicated from ' + src.name }]; S.projects[x.id] = x; markDirty(x); renderContent(); renderBar(); toast('Duplicated'); break; }
+    case 'archive': { const x = S.projects[v]; x.archived = true; markDirty(x, { action: 'Archived' }); if (S.cur === v) S.cur = sortedProjects()[0]?.id || null; render(); toast('Archived. Restore it from the Archived list.'); break; }
+    case 'unarchive': { const x = S.projects[v]; x.archived = false; markDirty(x, { action: 'Restored from archive' }); render(); break; }
+    case 'wiz-step': S.wiz.step = Math.min(5, Math.max(1, num(v))); renderContent(); break;
+    case 'wiz-start': {
+      const d = S.wiz.data; const x = normalize(starterProject(d)); x.owner = S.me || ''; x.status = 'Researching';
+      x.audit.push({ at: new Date().toISOString(), actor: S.me || '', action: 'Started research (manual entry: live research unavailable)' });
+      S.projects[x.id] = x; S.cur = x.id; remember('cur', x.id); S.wiz = { step: 1, data: {} }; markDirty(x); go('research'); toast('Blueprint created'); break; }
+    case 'row-add': { const arr = getPath(p, t.dataset.path); const tpl = JSON.parse(t.dataset.tpl || '{}'); tpl.id = uid('x'); arr.push(tpl); markDirty(p, { action: 'Added row', path: t.dataset.path }); keepScroll(renderContent); break; }
+    case 'row-del': { const arr = getPath(p, t.dataset.path); const [gone] = arr.splice(num(t.dataset.i), 1); markDirty(p, { action: 'Removed row', path: t.dataset.path, before: gone?.name || gone?.title || gone?.issue || gone?.claim || gone?.item || gone?.role || '' }); keepScroll(renderContent); renderSide(); break; }
+    case 'save-now': if (p) { clearTimeout(saveTimers[p.id]); await saveProject(p.id); toast(S.saveState[p.id]?.startsWith('error') ? 'Not saved. Try again.' : 'Saved'); } break;
+    case 'research': if (p) { if (p.status === 'Draft') { p.status = 'Researching'; markDirty(p, { action: 'Started research (manual entry: live research unavailable)' }); renderBar(); } go('research'); toast('Live research is not connected. Add evidence by hand.'); } break;
+    case 'recalc': if (p) { renderLiveExceptSave(); renderContent(); renderSide(); logAudit(p, { action: 'Recalculated' }); toast('Recalculated: ' + money(Engine.run(p).totals.opResult) + ' 12-month operating result'); } break;
+    case 'generate': if (p) { const r = Engine.run(p); const items = reviewItems(p, r); if (!['Ready', 'Published'].includes(p.status)) p.status = 'Needs Review'; markDirty(p, { action: 'Generated blueprint', after: `${items.length} review items, ${openBlocking(p, items).length} blocking` }); go('report'); toast(`Blueprint generated. ${openBlocking(p, items).length} blocking item(s) to review.`); } break;
+    case 'share': openModal(`<h2>Share</h2><p>Sharing is controlled by the page’s own Share menu at the top of this window. Everyone you share the page with can open ${S.storeMode === 'shared' ? 'and edit the blueprints saved here' : 'the page, but blueprints in this view are saved in your browser only'}.</p><p class="small muted">Per-project permissions and client portals are planned for Phase 3.</p><div class="flex" style="justify-content:flex-end"><button class="btn primary" data-act="modal-close">OK</button></div>`); break;
+    case 'remote-keep': delete S.remote[p.id]; saveProject(p.id); renderBanners(); break;
+    case 'remote-load': S.projects[p.id] = S.remote[p.id]; delete S.remote[p.id]; S.dirty[p.id] = false; render(); break;
+    case 'src-flag': { const s = p.sources.find(x => x.id === v); s.flagged = !s.flagged; markDirty(p, { action: s.flagged ? 'Marked evidence incorrect' : 'Cleared incorrect mark', after: s.claim }); renderContent(); renderSide(); break; }
+    case 'src-refresh': toast('Refresh needs live research, which is not connected. Edit the finding by hand.'); break;
+    case 'model': { const before = p.ops.selected; p.ops.selected = v; markDirty(p, { action: 'Changed operating model', path: 'ops.selected', before, after: v }); keepScroll(renderContent); renderSide(); toast(p.ops.models[v].name + ' model in use'); break; }
+    case 'rec': { const id = v; const st = t.dataset.s; const doIt = reason => { p.recDecisions[id] = { status: st, reason, actor: S.me || '', at: new Date().toISOString() }; markDirty(p, { action: st + ' recommendation', path: 'cap.' + id, after: st, reason }); keepScroll(renderContent); };
+      if (st === 'Dismissed') reasonModal('Dismiss recommendation', 'Say why this recommendation does not apply. The reason is kept in the audit log.', doIt); else doIt(''); break; }
+    case 'risk-ack': { const x = p.risks.find(r => r.id === v); if (x.ack) { x.ack = false; markDirty(p, { action: 'Removed acknowledgment', path: 'risks', before: 'acknowledged', after: 'open' }); keepScroll(renderContent); break; }
+      reasonModal('Acknowledge critical unknown', `“${esc(x.issue)}” is still unverified. Acknowledging lets the launch gate pass without verification. Record why.`, reason => { x.ack = true; markDirty(p, { action: 'Acknowledged critical unknown', path: 'risks', before: 'open', after: 'acknowledged', reason }); keepScroll(renderContent); }); break; }
+    case 'ready-launch': { p.readyForLaunch = !p.readyForLaunch; markDirty(p, { action: p.readyForLaunch ? 'Marked ready for launch' : 'Cleared ready for launch' }); keepScroll(renderContent); break; }
+    case 'plan-group': S.planGroup = v; renderContent(); break;
+    case 'task-move': { const i = p.tasks.findIndex(x => x.id === v); const d = num(t.dataset.d); const x = p.tasks[i]; const nw = Math.min(13, Math.max(1, num(x.week) + d)); if (nw !== num(x.week)) { markDirty(p, { action: 'Moved task', before: 'week ' + x.week, after: 'week ' + nw }); x.week = nw; } keepScroll(renderContent); break; }
+    case 'task-edit': taskModal(p.tasks.find(x => x.id === v)); break;
+    case 'task-new': taskModal(null); break;
+    case 'task-del': { const i = p.tasks.findIndex(x => x.id === v); const [g] = p.tasks.splice(i, 1); p.tasks.forEach(x => { if (x.dependsOn === v) x.dependsOn = ''; }); markDirty(p, { action: 'Deleted task', before: g.title }); closeModal(); renderContent(); break; }
+    case 'decide': { const id = v; const st = t.dataset.s; const blocking = t.dataset.b === '1'; const needs = blocking || st !== 'Approve';
+      const doIt = reason => { const before = p.reviewDecisions[id]?.status || 'Open'; p.reviewDecisions[id] = { status: st, reason, actor: S.me || '', at: new Date().toISOString() }; markDirty(p, { action: 'Review: ' + st, path: 'review.' + id, before, after: st, reason }); keepScroll(renderContent); renderSide(); };
+      if (needs) reasonModal(st + (blocking ? ' blocking item' : ''), blocking ? 'This is a material item. A reason is required and kept in the audit log.' : 'Add a reason for the record.', doIt, true); else doIt(''); break; }
+    case 'review-add': openModal(`<h2>Add review item</h2><form class="stack-sm" data-form="review-item"><div class="f"><label class="label" for="ri-k">Type</label><select id="ri-k" name="kind"><option>Unsupported assumption</option><option>Financial anomaly</option><option>Critical compliance item</option><option>Conflicting recommendation</option><option>Manual</option></select></div><div class="f"><label class="label" for="ri-t">Item</label><textarea id="ri-t" name="text" required rows="3"></textarea></div><label class="flex"><input type="checkbox" name="blocking"> Blocks sign-off</label><div class="flex" style="justify-content:flex-end"><button type="button" class="btn" data-act="modal-close">Cancel</button><button class="btn primary" type="submit">Add</button></div></form>`); break;
+    case 'consultant-on': p.settings.consultant = true; markDirty(p, { action: 'Turned on consultant mode' }); renderContent(); break;
+    case 'signoff': reasonModal('Consultant sign-off', 'Signing off marks this blueprint Ready. Add a note for the record.', reason => { p.signedOff = { actor: S.me || '', at: new Date().toISOString(), reason }; const before = p.status; p.status = 'Ready'; markDirty(p, { action: 'Consultant sign-off', path: 'status', before, after: 'Ready', reason }); render(); toast('Signed off. Status is Ready.'); }, false); break;
+    case 'publish': { const before = p.status; p.status = 'Published'; markDirty(p, { action: 'Published', path: 'status', before, after: 'Published' }); render(); break; }
+    case 'reset-weights': p.capWeights = {}; markDirty(p, { action: 'Reset CAP rule points' }); renderContent(); break;
+    case 'restore': restoreVersion(v); break;
+    case 'delete-ask': openModal(`<h2>Delete “${esc(p.name)}”?</h2><p>This removes the blueprint for everyone who uses this page. Download a backup first if you might need it.</p><div class="flex" style="justify-content:flex-end"><button class="btn" data-act="modal-close">Cancel</button><button class="btn danger" data-act="delete-do">Delete blueprint</button></div>`); break;
+    case 'delete-do': { const id = p.id; closeModal(); clearTimeout(saveTimers[id]); delete S.projects[id]; S.dirty[id] = false; try { if (S.db) await S.db.doc('projects/' + id).delete(); else persistLocal(); } catch (err) { toast('Could not delete. Try again.'); } S.cur = sortedProjects()[0]?.id || null; go('dashboard'); toast('Blueprint deleted'); break; }
+    case 'export-csv': exportCsv(v); break;
+    case 'export-json': download(`${slug(p.name)}-backup.json`, JSON.stringify(p, null, 2)); break;
+    case 'export-report': exportReport(); break;
+  }
+});
+function keepScroll(fn) { const y = window.scrollY; fn(); window.scrollTo(0, y); }
+async function restoreVersion(vid) {
+  const p = P();
+  try {
+    const d = await S.db.doc('projects/' + p.id + '/versions/' + vid).get(); if (!d.exists) return toast('That version is gone.');
+    await saveVersion('Before restore ' + new Date().toLocaleString('en-US'));
+    const data = clone(d.data().project); data.updatedAt = new Date().toISOString();
+    data.audit = (p.audit || []).concat([{ at: data.updatedAt, actor: S.me || '', action: 'Restored version', after: d.data().meta.label }]);
+    S.projects[p.id] = normalize(data); markDirty(data); render(); toast('Restored: ' + d.data().meta.label);
+  } catch (e) { toast('Could not restore that version.'); }
+}
+
+/* ---------- export ---------- */
+const slug = s => String(s || 'blueprint').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50) || 'blueprint';
+async function download(filename, data) {
+  if (!S.dl) return toast('Downloads are not available in this view.');
+  try { await S.dl.save({ filename, data }); } catch (e) { if (e?.code !== 'declined') toast(e?.code === 'rate_limited' ? 'A download prompt is already open.' : 'Download is not available here.'); }
+}
+const csvCell = v => { const s = String(v ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+function exportCsv(kind) {
+  const p = P(); const r = Engine.run(p); const L = r.months.map(x => monthLabel(r, x.i)); let rows = [];
+  if (kind === 'pl') { rows.push(['Line', ...L, 'Total']); [['Units sold', 'units'], ['Revenue', 'revenue'], ['Cost of goods', 'cogs'], ['Variable costs', 'varCost'], ['Contribution', 'contribution'], ['Fixed expenses', 'fixed'], ['Operating result', 'opResult'], ['Interest', 'interest'], ['Result after interest', 'net']].forEach(([l, k]) => rows.push([l, ...r.months.map(x => x[k].toFixed(2)), r.totals[k].toFixed(2)])); }
+  if (kind === 'cash') { rows.push(['Line', ...L]); [['Cash receipts', 'receipts'], ['Operating payments', 'payments'], ['Debt service', 'debtService'], ['Month-end cash', 'cash']].forEach(([l, k]) => rows.push([l, ...r.months.map(x => x[k].toFixed(2))])); rows.push(['Opening cash', r.cash0.toFixed(2)]); }
+  if (kind === 'assumptions') { rows.push(['Assumption', 'Value', 'Basis', 'Source']); Object.entries(p.fin.a).forEach(([k, a]) => rows.push([k, a.v, a.tag, (p.sources.find(s => s.id === a.src) || {}).title || ''])); p.products.forEach(x => rows.push(['Product: ' + x.name, `price ${x.price}; cost ${x.unitCost}; mix ${x.mix}%`, x.tag, ''])); }
+  if (kind === 'tasks') { rows.push(['Week', 'Group', 'Task', 'Owner', 'Depends on', 'Cost', 'Duration', 'Evidence', 'Done']); p.tasks.slice().sort((a, b) => num(a.week) - num(b.week)).forEach(t => rows.push([t.week, t.group, t.title, t.owner, (p.tasks.find(x => x.id === t.dependsOn) || {}).title || '', t.cost, t.duration, t.evidence, t.done ? 'Yes' : 'No'])); }
+  if (p.illustrative) rows.unshift(['ILLUSTRATIVE EXAMPLE - sample data']);
+  download(`${slug(p.name)}-${kind}.csv`, rows.map(r => r.map(csvCell).join(',')).join('\n'));
+}
+function exportReport() {
+  const p = P(); const body = reportHTML(p, p.settings.reportVariant || 'client');
+  const css = `body{font:14px/21px "IBM Plex Sans",Arial,sans-serif;color:#232c3a;background:#fff;margin:0}main{max-width:820px;margin:0 auto;padding:40px 32px;display:grid;gap:18px}h1{font:600 30px/36px "IBM Plex Serif",Georgia,serif;color:#1b2a4e;margin:0}h2{font:600 20px/26px "IBM Plex Serif",Georgia,serif;color:#1b2a4e;border-bottom:2px solid #c9a227;padding-bottom:4px;margin:8px 0 0}h3{font-size:14px;color:#1b2a4e;margin:0}p{margin:0}table{border-collapse:collapse;width:100%;font-size:12px}th{background:#f2eee5;text-align:left;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#566172;padding:6px 8px}td{padding:5px 8px;border-bottom:1px solid #e2dccf;vertical-align:top}.n{text-align:right;font-variant-numeric:tabular-nums}.total td{font-weight:600;background:#f7f4ee}.muted{color:#566172}.small{font-size:12px;line-height:17px}.cover{border-left:6px solid #c9a227;padding:8px 0 8px 20px;display:grid;gap:8px}.eyebrow{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#7d6213}.chip,.illus{display:inline-block;border-radius:999px;padding:0 8px;font-size:10px;font-weight:600;background:#f2eee5}.illus{background:#c9a22726;color:#7d6213;border-radius:4px}.pg{font-size:10px;color:#566172;text-align:right;border-top:1px solid #e2dccf;padding-top:4px;break-after:page}.tw{overflow:visible}@media print{main{padding:0}.pg{break-after:page}}`;
+  const html = `<!doctype html><html><head><meta charset="utf-8"><title>${esc(p.name)} — Mete Business Blueprint</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Serif:wght@600&display=swap"><style>${css}</style></head><body><main>${body}</main></body></html>`;
+  download(`${slug(p.name)}-blueprint.html`, html);
+}
+
+window.addEventListener('keydown', e => { if (e.key === 'Escape') { if ($('#modal-root').innerHTML) closeModal(); else if (S.navOpen) { S.navOpen = false; $('#app').classList.remove('open'); } } });
+window.addEventListener('hashchange', () => { const h = location.hash.slice(1); if (h && h !== S.screen && SCREENS.some(s => s[0] === h)) go(h); });
+$('#app').addEventListener('click', e => { if (S.navOpen && !e.target.closest('.side') && !e.target.closest('.menu-btn')) { S.navOpen = false; $('#app').classList.remove('open'); } });
+boot();
+</script>
+
+</body></html>
